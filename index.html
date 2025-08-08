@@ -1,122 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sundar Kanya ❤️</title>
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Short+Stack&amp;family=Homemade+Apple&amp;display=swap'>
-    <style>
-      .theme-toggle {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1000;
-        background: white;
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        font-size: 20px;
-        cursor: pointer;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      }
-    </style>
-    <script>
-        // Function to detect mobile devices
-        function isMobileDevice() {
-            return /Mobi|Android/i.test(navigator.userAgent);
-        }
-
-        // Load the appropriate script based on device type
-        =======
-        const themeStyle = document.createElement('style');
-        themeStyle.textContent = `
-            .theme-toggle {
-                position: fixed;
-                top: 20px;
-                left: 20px;
-                z-index: 1000;
-                background: white;
-                border: none;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-                cursor: pointer;
-                box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            }
-            .dark-theme {
-                background-color: #111;
-                color: #eee;
-            }
-            .dark-theme .paper {
-                background-color: #222 !important;
-                color: #fff !important;
-                filter: brightness(0.9) contrast(1.1);
-            }
-            .dark-theme .paper::after {
-                filter: hue-rotate(0deg) !important;
-            }`;
-        document.head.appendChild(themeStyle);
-
-        function loadScript() {
-            var script = document.createElement('script');
-            if (isMobileDevice()) {
-                script.src = 'mobile.js'; // Load mobile.js for mobile devices
-            } else {
-                script.src = 'script.js'; // Load script.js for laptops
-            }
-            document.body.appendChild(script);
-        }
-
-        // Call the loadScript function on window load
-        window.onload = loadScript;
-    </script>
+  <meta charset="UTF-8">
+  <title>Sundar Kanya ❤️</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Short+Stack&amp;family=Homemade+Apple&amp;display=swap">
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-      <button id="theme-toggle" class="theme-toggle">🌙</button>
-    <!-- Theme Toggle Button -->
-    <button id="theme-toggle" class="theme-toggle">🌙</button>
-    <!-- partial:index.partial.html -->
-    <!-- A pen by Developer Rahul  -->
-    <div class="paper heart"></div>
+  <!-- A pen by Developer Rahul -->
+  <div class="paper heart"></div>
 
-    <div class="paper image">
-        <p> and I fallen in</p>
-        <p>Love with You 😍 </p>
-        <img src="images/1.jpg" />
-    </div>
+  <div class="paper image">
+    <p> and I fallen in</p>
+    <p>Love with You 😍 </p>
+    <img src="images/1.jpg" />
+  </div>
 
-    <div class="paper image">
-        <p></p>
-        <img src="images/2.jpg" />
-    </div>
+  <div class="paper image">
+    <p></p>
+    <img src="images/2.jpg" />
+  </div>
 
-    <div class="paper image">
-        <p>How can be </p>
-        <p> someone so cute ❤️ </p>
-        <img src="images/3.jpg" />
-    </div>
+  <div class="paper image">
+    <p>How can be </p>
+    <p> someone so cute ❤️ </p>
+    <img src="images/3.jpg" />
+  </div>
 
-    <div class="paper red">
-        <p class="p1"> and My Favorite</p>
-        <p class="p2">Person 😍</p>
-    </div>
+  <div class="paper red">
+    <p class="p1"> and My Favorite</p>
+    <p class="p2">Person 😍</p>
+  </div>
 
-    <div class="paper">
-        <p class="p1">You are Cute </p>
-        <p class="p1">Amazing <span style="color: red !important;">❤️</span></p>
-    </div>
+  <div class="paper">
+    <p class="p1">You are Cute </p>
+    <p class="p1">Amazing <span style="color: red !important;">❤️</span></p>
+  </div>
 
-    <div class="paper">
-        <p class="p1">Drag the papers to move!</p>
-    </div>
-    <!-- partial -->
-    <script>
-        const toggle = document.getElementById('theme-toggle');
-        toggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            toggle.textContent = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
-        });
-    </script>
+  <div class="paper">
+    <p class="p1">Drag the papers to move!</p>
+  </div>
+
+  <!-- Device-based script loader -->
+  <script>
+    function getDeviceType() {
+      const ua = navigator.userAgent;
+      const width = window.innerWidth;
+
+      if (/Mobi|Android/i.test(ua)) {
+        return width <= 768 ? 'mobile' : 'tablet';
+      }
+      return 'desktop';
+    }
+
+    const deviceType = getDeviceType();
+    const script = document.createElement('script');
+
+    if (deviceType === 'mobile') {
+      script.src = './mobile.js';
+    }  else {
+      script.src = './script.js';
+    }
+
+    document.body.appendChild(script);
+  </script>
 </body>
 </html>
