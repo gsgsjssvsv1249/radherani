@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>KritiKa Kon H?</title>
+    <title>CodePen - Drag Papers ❤️</title>
     <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Short+Stack&amp;family=Homemade+Apple&amp;display=swap'>
     <link rel="stylesheet" href="./style.css">
     <script>
@@ -12,6 +12,32 @@
         }
 
         // Load the appropriate script based on device type
+        const themeStyle = document.createElement('style');
+        themeStyle.textContent = `
+            .theme-toggle {
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1000;
+                background: white;
+                border: none;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                cursor: pointer;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            .dark-theme {
+                background-color: #111;
+                color: #eee;
+            }
+            .dark-theme .paper {
+                background-color: #222 !important;
+                color: #fff !important;
+            }`;
+        document.head.appendChild(themeStyle);
+
         function loadScript() {
             var script = document.createElement('script');
             if (isMobileDevice()) {
@@ -27,6 +53,8 @@
     </script>
 </head>
 <body>
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle" class="theme-toggle">🌙</button>
     <!-- partial:index.partial.html -->
     <!-- A pen by Developer Rahul  -->
     <div class="paper heart"></div>
@@ -62,5 +90,12 @@
         <p class="p1">Drag the papers to move!</p>
     </div>
     <!-- partial -->
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        toggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            toggle.textContent = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
+        });
+    </script>
 </body>
 </html>
