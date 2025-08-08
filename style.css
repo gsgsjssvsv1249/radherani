@@ -1,20 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Zeyada&display=swap');
 
+
+
+
 body {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+
   background-size: 1000px;
   background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg");
   background-position: center center;
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
-}
-
-body.dark-theme {
-  background-color: #111; /* Dark background for night mode */
-  background-image: none; /* Remove background image in dark mode */
-  color: #eee; /* Light text color for night mode */
 }
 
 .paper {
@@ -22,15 +19,12 @@ body.dark-theme {
   background-size: 500px;
   background-position: center center;
   padding: 20px 100px;
+/*  min-width: 800px; */
+  
   transform: rotateZ(-5deg);
   box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
+  
   position: absolute;
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for theme change */
-}
-
-body.dark-theme .paper {
-  background-color: #222; /* Dark background for paper in night mode */
-  color: #fff; /* Light text color for paper in night mode */
 }
 
 .paper.heart {
@@ -44,7 +38,6 @@ body.dark-theme .paper {
 .paper.image {
   padding: 10px;
 }
-
 .paper.image p {
   font-size: 30px;
 }
@@ -75,10 +68,6 @@ p {
   color: rgb(0,0,100);
   opacity: 0.75;
   user-select: none;
-  transition: color 0.3s; /* Smooth transition for text color change */
-}
-
-body.dark-theme p {
-  color: #fff !important; /* Light text color for paragraphs in night mode */
-  opacity: 0.9 !important; /* Ensure text is visible */
+  
+  // filter: drop-shadow(2px 1.5px 1px rgba(0,0,105,0.9));
 }
