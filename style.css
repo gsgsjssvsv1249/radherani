@@ -10,7 +10,7 @@ body.day-mode {
 
 /* 🌙 NIGHT MODE */
 body.night-mode {
-  background-color: #121212;
+  background-color: #121212; /* Dark background */
   background-image: none;
   color: #f5f5f5;
   transition: background 0.5s ease, color 0.5s ease;
@@ -38,10 +38,8 @@ body {
 
 /* 🌙 Night Paper Variant */
 body.night-mode .paper {
-  background-color: #121212; /* Dark background */
-  background-image: url("https://i0.wp.com/textures.world/wp-content/uploads/2018/10/2-Millimeter-Paper-Background-copy.jpg?ssl=1"); /* Same texture */
-  background-size: 500px; /* Adjust size as needed */
-  background-position: center center;
+  background-color: #1e1e1e; /* Darker background for paper */
+  background-image: none; /* No texture for night mode */
   box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
   color: #f5f5f5;
 }
@@ -93,7 +91,6 @@ p {
   color: rgb(0,0,100);
   opacity: 0.75;
   user-select: none;
-  /* filter: drop-shadow(2px 1.5px 1px rgba(0,0,105,0.9)); */
 }
 
 /* 🌙 Night Text Variant */
@@ -123,4 +120,16 @@ body.night-mode p {
 body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
+}
+
+/* 🌑 Graph Styling for Night Mode */
+.graph {
+  background-color: #1e1e1e; /* Dark background for graphs */
+  border: 2px solid #000; /* Black border for graphs */
+  color: #f5f5f5; /* Text color for graphs */
+}
+
+/* 🌑 Graph Lines */
+.graph .line {
+  stroke: #000; /* Black color for graph lines */
 }
