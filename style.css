@@ -1,32 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Zeyada&display=swap');
 
+/* 🌞 DAY MODE */
+body.day-mode {
+  background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg");
+  background-size: 1000px;
+  background-position: center center;
+  color: rgb(0, 0, 100);
+}
 
-
+/* 🌙 NIGHT MODE */
+body.night-mode {
+  background-color: #121212;
+  background-image: none;
+  color: #f5f5f5;
+  transition: background 0.5s ease;
+}
 
 body {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-
-  background-size: 1000px;
-  background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg");
-  background-position: center center;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
+/* 📝 Paper Styling */
 .paper {
   background-image: url("https://i0.wp.com/textures.world/wp-content/uploads/2018/10/2-Millimeter-Paper-Background-copy.jpg?ssl=1");
   background-size: 500px;
   background-position: center center;
   padding: 20px 100px;
-/*  min-width: 800px; */
-  
   transform: rotateZ(-5deg);
   box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
-  
   position: absolute;
+  transition: background 0.5s ease, box-shadow 0.5s ease;
 }
 
+/* 🌙 Night Paper Variant */
+body.night-mode .paper {
+  background-color: #1e1e1e;
+  background-image: none;
+  box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
+}
+
+/* ❤️ Heart Paper */
 .paper.heart {
   position: relative;
   width: 200px;
@@ -35,19 +52,23 @@ body {
   border-radius: 50%;
 }
 
+/* 🖼️ Image Paper */
 .paper.image {
   padding: 10px;
 }
+
 .paper.image p {
   font-size: 30px;
 }
 
+/* 📷 Images */
 img {
   max-height: 200px;
   width: 100%;
   user-select: none;
 }
 
+/* ❤️ Heart Icon Overlay */
 .paper.heart::after {
   content: "";
   background-image: url('https://cdn.pixabay.com/photo/2016/03/31/19/25/cartoon-1294994__340.png');
@@ -62,12 +83,40 @@ img {
   opacity: 0.6;
 }
 
+/* ✍️ Text Styling */
 p {
   font-family: 'Zeyada';
   font-size: 50px;
   color: rgb(0,0,100);
   opacity: 0.75;
   user-select: none;
-  
-  // filter: drop-shadow(2px 1.5px 1px rgba(0,0,105,0.9));
+  transition: color 0.5s ease;
+}
+
+/* 🌙 Night Text Variant */
+body.night-mode p {
+  color: #f5f5f5;
+}
+
+/* 🌗 Toggle Button */
+.toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ff4081;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-family: 'Short Stack', cursive;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.night-mode .toggle-btn {
+  background: #333;
+  color: #ff4081;
 }
