@@ -79,5 +79,6 @@ p {
 }
 
 body.dark-theme p {
-  color: #eee; /* Light text color for paragraphs in night mode */
+  color: #fff !important; /* Light text color for paragraphs in night mode */
+  opacity: 0.9 !important; /* Ensure text is visible */
 }
