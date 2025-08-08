@@ -39,11 +39,12 @@ body {
 /* 🌙 Night Paper Variant */
 body.night-mode .paper {
   background-color: #000;
-  background-image: none; /* Changed this line */
+  background-image: url("https://i0.wp.com/textures.world/wp-content/uploads/2018/10/2-Millimeter-Paper-Background-copy.jpg?ssl=1");
   background-size: 500px;
   background-position: center center;
   box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
   color: #f5f5f5;
+  filter: invert(1);
 }
 
 /* ❤️ Heart Paper */
