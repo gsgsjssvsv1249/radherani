@@ -13,7 +13,7 @@ body.night-mode {
   background-color: #121212;
   background-image: none;
   color: #f5f5f5;
-  transition: background 0.5s ease;
+  transition: background 0.5s ease, color 0.5s ease;
 }
 
 body {
@@ -90,7 +90,7 @@ p {
   color: rgb(0,0,100);
   opacity: 0.75;
   user-select: none;
-  transition: color 0.5s ease;
+  /* filter: drop-shadow(2px 1.5px 1px rgba(0,0,105,0.9)); */
 }
 
 /* 🌙 Night Text Variant */
