@@ -11,9 +11,10 @@ body.day-mode {
 /* 🌙 NIGHT MODE */
 body.night-mode {
   background-color: #121212;
-  background-image: none;
+  background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg"); /* Changed to day mode image */
   color: #f5f5f5;
   transition: background 0.5s ease, color 0.5s ease;
+  filter: invert(1); /* Added filter to invert colors */
 }
 
 body {
@@ -44,7 +45,7 @@ body.night-mode .paper {
   background-position: center center;
   box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
   color: #f5f5f5;
-  filter: none; /* Removed invert filter */
+  filter: invert(1); /* Added filter to invert colors */
 }
 
 /* ❤️ Heart Paper */
