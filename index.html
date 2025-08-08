@@ -48,37 +48,19 @@
   <script>
     // 🌗 Day/Night Mode Toggle
     function toggleMode() {
-      const body = document.body;
-      if (body.classList.contains('night-mode')) {
-        body.classList.remove('night-mode');
-        body.classList.add('day-mode');
-      } else {
-        body.classList.remove('day-mode');
-        body.classList.add('night-mode');
-      }
+      document.body.classList.toggle('night-mode');
+      document.body.classList.toggle('day-mode');
     }
-
-    // 🌞 Default to Day Mode
     document.body.classList.add('day-mode');
 
-    // 📱 Device Detection
-    function getDeviceType() {
-      const ua = navigator.userAgent;
-      const width = window.innerWidth;
-
-      if (/Mobi|Android/i.test(ua)) {
-        return width <= 768 ? 'mobile' : 'tablet';
-      }
-      return 'desktop';
-    }
-
-    const deviceType = getDeviceType();
+    // Device Detection
+    const ua = navigator.userAgent;
+    const width = window.innerWidth;
     const script = document.createElement('script');
 
-    if (deviceType === 'mobile') {
+    if (/Mobi|Android/i.test(ua)) {
       script.src = './mobile.js';
-    } else if (deviceType === 'tablet') {
-       else {
+    } else {
       script.src = './script.js';
     }
 
