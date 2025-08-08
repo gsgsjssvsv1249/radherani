@@ -2,9 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sundar Kanya</title>
+    <title>Sundar Kanya ❤️</title>
     <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Short+Stack&amp;family=Homemade+Apple&amp;display=swap'>
-    <link rel="stylesheet" href="./style.css">
+    <style>
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        background: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      }
+    </style>
     <script>
         // Function to detect mobile devices
         function isMobileDevice() {
@@ -12,6 +27,7 @@
         }
 
         // Load the appropriate script based on device type
+        =======
         const themeStyle = document.createElement('style');
         themeStyle.textContent = `
             .theme-toggle {
@@ -35,6 +51,10 @@
             .dark-theme .paper {
                 background-color: #222 !important;
                 color: #fff !important;
+                filter: brightness(0.9) contrast(1.1);
+            }
+            .dark-theme .paper::after {
+                filter: hue-rotate(0deg) !important;
             }`;
         document.head.appendChild(themeStyle);
 
@@ -53,6 +73,7 @@
     </script>
 </head>
 <body>
+      <button id="theme-toggle" class="theme-toggle">🌙</button>
     <!-- Theme Toggle Button -->
     <button id="theme-toggle" class="theme-toggle">🌙</button>
     <!-- partial:index.partial.html -->
