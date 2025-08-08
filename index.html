@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Sundar Kanya ❤️</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Short+Stack&amp;family=Homemade+Apple&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Short+Stack&family=Homemade+Apple&display=swap">
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+  <!-- 🌗 Day/Night Toggle Button -->
+  <button class="toggle-btn" onclick="toggleMode()">🌞 Day / 🌙 Night</button>
+
   <!-- A pen by Developer Rahul -->
   <div class="paper heart"></div>
 
@@ -41,8 +44,24 @@
     <p class="p1">Drag the papers to move!</p>
   </div>
 
-  <!-- Device-based script loader -->
+  <!-- 📜 Script Loader + Mode Toggle -->
   <script>
+    // 🌗 Day/Night Mode Toggle
+    function toggleMode() {
+      const body = document.body;
+      if (body.classList.contains('night-mode')) {
+        body.classList.remove('night-mode');
+        body.classList.add('day-mode');
+      } else {
+        body.classList.remove('day-mode');
+        body.classList.add('night-mode');
+      }
+    }
+
+    // 🌞 Default to Day Mode
+    document.body.classList.add('day-mode');
+
+    // 📱 Device Detection
     function getDeviceType() {
       const ua = navigator.userAgent;
       const width = window.innerWidth;
@@ -58,7 +77,8 @@
 
     if (deviceType === 'mobile') {
       script.src = './mobile.js';
-    }  else {
+    } else if (deviceType === 'tablet') {
+       else {
       script.src = './script.js';
     }
 
