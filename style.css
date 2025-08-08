@@ -7,16 +7,18 @@ body.day-mode {
   background-position: center center;
   color: rgb(0, 0, 100);
 }
-
+---
 /* 🌙 NIGHT MODE */
 body.night-mode {
   background-color: #121212;
-  background-image: url("https://www.psdgraphics.com/wp-content/uploads/2022/01/white-math-paper-texture.jpg"); /* Changed to day mode image */
+  /* New night-mode specific background image */
+  background-image: url("https://www.textures.world/wp-content/uploads/2018/10/Seamless-Millimeter-Paper-Background-copy.jpg");
+  background-size: 1000px;
+  background-position: center center;
   color: #f5f5f5;
   transition: background 0.5s ease, color 0.5s ease;
-  filter: invert(1); /* Added filter to invert colors */
 }
-
+---
 body {
   height: 100vh;
   display: flex;
@@ -24,7 +26,7 @@ body {
   justify-content: center;
   transition: background 0.5s ease, color 0.5s ease;
 }
-
+---
 /* 📝 Paper Styling */
 .paper {
   background-image: url("https://i0.wp.com/textures.world/wp-content/uploads/2018/10/2-Millimeter-Paper-Background-copy.jpg?ssl=1");
@@ -36,18 +38,18 @@ body {
   position: absolute;
   transition: background 0.5s ease, box-shadow 0.5s ease;
 }
-
+---
 /* 🌙 Night Paper Variant */
 body.night-mode .paper {
   background-color: #000;
-  background-image: url("https://i0.wp.com/textures.world/wp-content/uploads/2018/10/2-Millimeter-Paper-Background-copy.jpg?ssl=1");
+  /* New night-mode specific paper image */
+  background-image: url("https://www.textures.world/wp-content/uploads/2018/10/Seamless-Millimeter-Paper-Background-copy.jpg");
   background-size: 500px;
   background-position: center center;
   box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
   color: #f5f5f5;
-  filter: invert(1); /* Added filter to invert colors */
 }
-
+---
 /* ❤️ Heart Paper */
 .paper.heart {
   position: relative;
@@ -56,23 +58,23 @@ body.night-mode .paper {
   padding: 0;
   border-radius: 50%;
 }
-
+---
 /* 🖼️ Image Paper */
 .paper.image {
   padding: 10px;
 }
-
+---
 .paper.image p {
   font-size: 30px;
 }
-
+---
 /* 📷 Images */
 img {
   max-height: 200px;
   width: 100%;
   user-select: none;
 }
-
+---
 /* ❤️ Heart Icon Overlay */
 .paper.heart::after {
   content: "";
@@ -87,7 +89,7 @@ img {
   background-repeat: no-repeat;
   opacity: 0.6;
 }
-
+---
 /* ✍️ Text Styling */
 p {
   font-family: 'Zeyada';
@@ -97,13 +99,13 @@ p {
   user-select: none;
   /* filter: drop-shadow(2px 1.5px 1px rgba(0,0,105,0.9)); */
 }
-
+---
 /* 🌙 Night Text Variant */
 body.night-mode p {
   color: #f5f5f5;
   opacity: 1; /* Added this line */
 }
-
+---
 /* 🌗 Toggle Button */
 .toggle-btn {
   position: fixed;
@@ -121,7 +123,7 @@ body.night-mode p {
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   transition: background 0.3s ease, color 0.3s ease;
 }
-
+---
 body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
