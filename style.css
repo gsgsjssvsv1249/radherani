@@ -118,31 +118,15 @@ body.night-mode p {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 24px; /* Adjust font size for emoji */
   cursor: pointer;
   z-index: 9999;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Icons */
-.sun-icon {
-  display: block; /* Show sun icon */
-}
-
-.moon-icon {
-  display: none; /* Hide moon icon */
-}
-
 /* 🌙 Night Mode Styles for Button */
 body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
-}
-
-body.night-mode .sun-icon {
-  display: none; /* Hide sun icon in night mode */
-}
-
-body.night-mode .moon-icon {
-  display: block; /* Show moon icon in night mode */
 }
