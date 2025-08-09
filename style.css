@@ -17,24 +17,12 @@ body.night-mode {
   transition: background 0.5s ease, color 0.5s ease;
 }
 
-/* Ensure the body takes the full height and uses flexbox */
-html, body {
-  height: 100%;  /* Ensure the body takes the full height */
-  margin: 0;     /* Remove default margin */
-}
-
 body {
-  display: flex;          /* Use flexbox for layout */
-  flex-direction: column; /* Stack children vertically */
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.5s ease, color 0.5s ease;
-}
-
-/* Footer styling */
-footer {
-  margin-top: auto;      /* Push footer to the bottom */
-  background-color: #f8f9fa; /* Optional: Add a background color */
-  padding: 10px;         /* Optional: Add some padding */
-  text-align: center;     /* Center the text */
 }
 
 /* 📝 Paper Styling */
@@ -116,27 +104,34 @@ body.night-mode p {
   opacity: 1;
 }
 
-#day-night-toggle {
+/* 🌗 Toggle Button */
+.toggle-btn {
   position: fixed;
-  top: 2rem;
-  right: 2rem;
-  z-index: 1000;
-  cursor: pointer;
-  width: 48px;
-  height: 48px;
+  top: 20px;
+  left: 20px;
+  background: #ff4081;
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  border: 2px solid var(--text-color);
-  background-color: var(--button-bg-color);
-  transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 10px var(--glow-color-1);
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
-#day-night-toggle svg {
-  width: 24px;
-  height: 24px;
-  fill: var(--text-color);
-  transition: fill 0.5s ease-in-out;
+/* 🌙 Night Mode Styles for Button */
+body.night-mode .toggle-btn {
+  background: #333;
+  color: #ff4081;
+}
+
+/* 🌀 Button Press Animation */
+.toggle-btn:active {
+  transform: scale(0.95);
 }
