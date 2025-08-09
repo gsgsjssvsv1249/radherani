@@ -130,3 +130,26 @@ body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
 }
+
+/* Footer Styling */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+  z-index: 1000; /* Ensure it appears above other content */
+}
+
+footer a {
+  color: #ff4081; /* Link color */
+  text-decoration: none; /* Remove underline */
+}
+
+footer a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
