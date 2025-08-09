@@ -10,8 +10,9 @@ body.day-mode {
 
 /* 🌙 NIGHT MODE */
 body.night-mode {
-  background-color: #121212; /* Dark background */
-  background-image: none;
+  background-image: url("bg1.jpeg"); /* Use bg1.jpeg for night mode */
+  background-size: cover; /* Cover the entire background */
+  background-position: center center;
   color: #f5f5f5;
   transition: background 0.5s ease, color 0.5s ease;
 }
@@ -26,9 +27,8 @@ body {
 
 /* 📝 Paper Styling */
 .paper {
-  background-image: url("https://i0.wp.com/textures.world/wp-content/uploads/2018/10/2-Millimeter-Paper-Background-copy.jpg?ssl=1");
-  background-size: 500px;
-  background-position: center center;
+  background-image: url("paper1.webp"); /* Use paper1.webp for paper texture */
+  background-size: cover; /* Cover the entire paper */
   padding: 20px 100px;
   transform: rotateZ(-5deg);
   box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
@@ -39,7 +39,7 @@ body {
 /* 🌙 Night Paper Variant */
 body.night-mode .paper {
   background-color: #1e1e1e; /* Darker background for paper */
-  background-image: none; /* No texture for night mode */
+  background-image: url("paper1.webp"); /* Use paper1.webp for night mode */
   box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
   color: #f5f5f5;
 }
