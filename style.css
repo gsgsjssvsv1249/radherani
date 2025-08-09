@@ -10,7 +10,7 @@ body.day-mode {
 
 /* 🌙 NIGHT MODE */
 body.night-mode {
-  background-image: url("bg1.jpeg"); /* Use bg1.jpeg for night mode */
+  background-image: url("images/bg1.jpeg"); /* Use images/bg1.jpeg for night mode */
   background-size: cover; /* Cover the entire background */
   background-position: center center;
   color: #f5f5f5;
@@ -27,7 +27,7 @@ body {
 
 /* 📝 Paper Styling */
 .paper {
-  background-image: url("paper1.webp"); /* Use paper1.webp for paper texture */
+  background-image: url("images/paper1.webp"); /* Use images/paper1.webp for paper texture */
   background-size: cover; /* Cover the entire paper */
   padding: 20px 100px;
   transform: rotateZ(-5deg);
@@ -39,7 +39,7 @@ body {
 /* 🌙 Night Paper Variant */
 body.night-mode .paper {
   background-color: rgba(30, 30, 30, 0.8); /* Darker background for paper with some transparency */
-  background-image: url("paper1.webp"); /* Use paper1.webp for night mode */
+  background-image: url("images/paper1.webp"); /* Use images/paper1.webp for night mode */
   box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
   color: #f5f5f5;
 }
