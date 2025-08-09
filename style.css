@@ -108,21 +108,41 @@ body.night-mode p {
 .toggle-btn {
   position: fixed;
   top: 20px;
-  right: 20px;
+  left: 20px;
   background: #ff4081;
   color: white;
   border: none;
-  padding: 10px 15px;
-  font-family: 'Short Stack', cursive;
-  font-size: 16px;
-  border-radius: 8px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Make it circular */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   z-index: 9999;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   transition: background 0.3s ease, color 0.3s ease;
 }
 
+/* Icons */
+.sun-icon {
+  display: block; /* Show sun icon */
+}
+
+.moon-icon {
+  display: none; /* Hide moon icon */
+}
+
+/* 🌙 Night Mode Styles for Button */
 body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
+}
+
+body.night-mode .sun-icon {
+  display: none; /* Hide sun icon in night mode */
+}
+
+body.night-mode .moon-icon {
+  display: block; /* Show moon icon in night mode */
 }
