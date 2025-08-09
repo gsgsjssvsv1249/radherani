@@ -34,9 +34,15 @@ body {
   transition: background 0.5s ease, box-shadow 0.5s ease;
 }
 
+/* 🌞 Day Paper Variant */
+body.day-mode .paper {
+  background-image: url("images/paper.webp"); /* Use images/paper.webp for day mode */
+  background-size: cover; /* Cover the entire paper */
+}
+
 /* 🌙 Night Paper Variant */
 body.night-mode .paper {
-  background-image: url("images/paper1.webp"); /* Use images/paper1.webp for paper texture */
+  background-image: url("images/paper1.webp"); /* Use images/paper1.webp for night mode */
   background-size: cover; /* Cover the entire paper */
   background-color: rgba(30, 30, 30, 0.8); /* Darker background for paper with some transparency */
   box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
