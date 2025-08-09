@@ -108,48 +108,21 @@ body.night-mode p {
 .toggle-btn {
   position: fixed;
   top: 20px;
-  left: 20px;
+  right: 20px;
   background: #ff4081;
   color: white;
   border: none;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%; /* Make it circular */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px; /* Adjust font size for emoji */
+  padding: 10px 15px;
+  font-family: 'Short Stack', cursive;
+  font-size: 16px;
+  border-radius: 8px;
   cursor: pointer;
   z-index: 9999;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* 🌙 Night Mode Styles for Button */
 body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
-}
-
-/* Footer Styling */
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-  font-size: 14px;
-  z-index: 1000; /* Ensure it appears above other content */
-}
-
-footer a {
-  color: #ff4081; /* Link color */
-  text-decoration: none; /* Remove underline */
-}
-
-footer a:hover {
-  text-decoration: underline; /* Underline on hover */
 }
