@@ -15,6 +15,9 @@ class Paper {
   currentPaperY = 0;
   rotating = false;
 
+  function changeTheme(theme) {
+  document.body.className = theme;
+}
   init(paper) {
     document.addEventListener('mousemove', (e) => {
       if (!this.rotating) {
