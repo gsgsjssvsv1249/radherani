@@ -12,8 +12,8 @@
 
   <!-- 📤 Upload Button -->
   <div class="upload-container">
-    <input type="file" id="imageUpload" accept="image/*" multiple hidden />
-    <label for="imageUpload" class="upload-btn">📤 Upload 3 Images</label>
+    <input type="file" id="imageUpload" accept="image/*" hidden />
+    <label for="imageUpload" class="upload-btn">📤 Upload Image</label>
   </div>
 
   <!-- ❤️ Heart Paper -->
@@ -56,7 +56,7 @@
     const toggleBtn = document.getElementById('modeToggle');
     const body = document.body;
 
-    // 🌞 Initial Mode
+    // Set initial mode to day
     body.classList.add('day-mode');
     toggleBtn.textContent = '🌞';
 
@@ -72,26 +72,23 @@
       }
     });
 
-    // 📤 Handle Image Upload (Replace 3 existing images)
+    // 📤 Handle Image Upload
     const imageUpload = document.getElementById('imageUpload');
-    const imageElements = document.querySelectorAll('.paper.image img');
-
     imageUpload.addEventListener('change', (event) => {
-      const files = Array.from(event.target.files);
-      if (files.length !== 3) {
-        alert("Please upload exactly 3 images to personalize the animation.");
-        return;
-      }
+      const file = event.target.files[0];
+      if (!file) return;
 
-      files.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          if (imageElements[index]) {
-            imageElements[index].src = e.target.result;
-          }
-        };
-        reader.readAsDataURL(file);
-      });
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const newPaper = document.createElement('div');
+        newPaper.className = 'paper image';
+        newPaper.innerHTML = `
+          <p>Your Uploaded Image 💖</p>
+          <img src="${e.target.result}" />
+        `;
+        document.body.appendChild(newPaper);
+      };
+      reader.readAsDataURL(file);
     });
 
     // 📱 Device Detection
