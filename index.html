@@ -78,18 +78,28 @@
       const file = event.target.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const newPaper = document.createElement('div');
-        newPaper.className = 'paper image';
-        newPaper.innerHTML = `
-          <p>Your Uploaded Image 💖</p>
-          <img src="${e.target.result}" />
-        `;
-        document.body.appendChild(newPaper);
-      };
-      reader.readAsDataURL(file);
-    });
+      const formData = new FormData();
+formData.append('file', file);
+formData.append('upload_preset', 'kriitika_upload'); // your preset name
+
+fetch('https://api.cloudinary.com/v1_1/dpgi8oews/image/upload', {
+  method: 'POST',
+  body: formData
+})
+.then(res => res.json())
+.then(data => {
+  const newPaper = document.createElement('div');
+  newPaper.className = 'paper image';
+  newPaper.innerHTML = `
+    <p>Your Uploaded Image 💖</p>
+    <img src="${data.secure_url}" />
+  `;
+  document.body.appendChild(newPaper);
+})
+.catch(err => {
+  console.error('Upload failed:', err);
+  alert('Image upload failed. Please try again.');
+});
 
     // 📱 Device Detection
     const ua = navigator.userAgent;
