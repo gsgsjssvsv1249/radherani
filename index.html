@@ -12,8 +12,8 @@
 
   <!-- 📤 Upload Button -->
   <div class="upload-container">
-    <input type="file" id="imageUpload" accept="image/*" hidden />
-    <label for="imageUpload" class="upload-btn">📤 Upload Image</label>
+    <input type="file" id="imageUpload" accept="image/*" multiple hidden />
+    <label for="imageUpload" class="upload-btn">📤 Upload 3 Images</label>
   </div>
 
   <!-- ❤️ Heart Paper -->
@@ -56,7 +56,7 @@
     const toggleBtn = document.getElementById('modeToggle');
     const body = document.body;
 
-    // Set initial mode to day
+    // 🌞 Initial Mode
     body.classList.add('day-mode');
     toggleBtn.textContent = '🌞';
 
@@ -72,34 +72,27 @@
       }
     });
 
-    // 📤 Handle Image Upload
+    // 📤 Handle Image Upload (Replace 3 existing images)
     const imageUpload = document.getElementById('imageUpload');
+    const imageElements = document.querySelectorAll('.paper.image img');
+
     imageUpload.addEventListener('change', (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
+      const files = Array.from(event.target.files);
+      if (files.length !== 3) {
+        alert("Please upload exactly 3 images to personalize the animation.");
+        return;
+      }
 
-      const formData = new FormData();
-formData.append('file', file);
-formData.append('upload_preset', 'kriitika_upload'); // your preset name
-
-fetch('https://api.cloudinary.com/v1_1/dpgi8oews/image/upload', {
-  method: 'POST',
-  body: formData
-})
-.then(res => res.json())
-.then(data => {
-  const newPaper = document.createElement('div');
-  newPaper.className = 'paper image';
-  newPaper.innerHTML = `
-    <p>Your Uploaded Image 💖</p>
-    <img src="${data.secure_url}" />
-  `;
-  document.body.appendChild(newPaper);
-})
-.catch(err => {
-  console.error('Upload failed:', err);
-  alert('Image upload failed. Please try again.');
-});
+      files.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (imageElements[index]) {
+            imageElements[index].src = e.target.result;
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    });
 
     // 📱 Device Detection
     const ua = navigator.userAgent;
