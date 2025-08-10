@@ -15,7 +15,6 @@ class Paper {
   currentPaperY = 0;
   rotating = false;
 
-
   init(paper) {
     paper.addEventListener('touchstart', (e) => {
       if (this.holdingPaper) return;
@@ -57,4 +56,3 @@ class Paper {
 
         this.prevTouchX = this.touchMoveX;
         this.prevTouchY = this.touchMoveY
-
