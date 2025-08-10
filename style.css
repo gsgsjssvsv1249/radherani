@@ -182,23 +182,3 @@ body.night-mode .upload-btn {
     transform: scale(1);
   }
 }
-body.romantic {
-  background: linear-gradient(to right, #ffe0e0, #ffc0cb);
-  font-family: 'Pacifico', cursive;
-}
-
-body.vintage {
-  background: #f4ecd8;
-  font-family: 'Georgia', serif;
-}
-
-body.dreamy {
-  background: linear-gradient(to right, #e0eafc, #cfdef3);
-  font-family: 'Zeyada', cursive;
-}
-
-body.dark {
-  background: #1e1e1e;
-  color: #f0f0f0;
-  font-family: 'Lato', sans-serif;
-}
