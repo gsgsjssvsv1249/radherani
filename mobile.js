@@ -30,13 +30,11 @@ class Paper {
     paper.addEventListener('touchmove', (e) => {
       e.preventDefault();
 
-      if (!this.rotating) {
-        this.touchMoveX = e.touches[0].clientX;
-        this.touchMoveY = e.touches[0].clientY;
+      this.touchMoveX = e.touches[0].clientX;
+      this.touchMoveY = e.touches[0].clientY;
 
-        this.velX = this.touchMoveX - this.prevTouchX;
-        this.velY = this.touchMoveY - this.prevTouchY;
-      }
+      this.velX = this.touchMoveX - this.prevTouchX;
+      this.velY = this.touchMoveY - this.prevTouchY;
 
       const dirX = this.touchMoveX - this.touchStartX;
       const dirY = this.touchMoveY - this.touchStartY;
@@ -53,52 +51,8 @@ class Paper {
       }
 
       if (this.holdingPaper) {
-        if (!this.rotating) {
-          this.currentPaperX += this.velX;
-          this.currentPaperY += this.velY;
-        }
+        this.currentPaperX += this.velX;
+        this.currentPaperY += this.velY;
 
         this.prevTouchX = this.touchMoveX;
-        this.prevTouchY = this.touchMoveY;
-
-        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
-      }
-    });
-
-    paper.addEventListener('touchend', () => {
-      this.holdingPaper = false;
-      this.rotating = false;
-    });
-
-    // Optional: Two-finger rotation (gesture support)
-    paper.addEventListener('gesturestart', (e) => {
-      e.preventDefault();
-      this.rotating = true;
-    });
-
-    paper.addEventListener('gestureend', () => {
-      this.rotating = false;
-    });
-  }
-}
-
-// Initialize all existing papers
-const papers = Array.from(document.querySelectorAll('.paper'));
-papers.forEach(paper => {
-  const p = new Paper();
-  p.init(paper);
-});
-
-// Observe new papers (e.g., uploaded images)
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    mutation.addedNodes.forEach((node) => {
-      if (node.classList && node.classList.contains('paper')) {
-        const p = new Paper();
-        p.init(node);
-      }
-    });
-  });
-});
-
-observer.observe(document.body, { childList: true });
+        this.prevTouchY = this.touchMoveY
