@@ -7,9 +7,20 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <button class="toggle-btn" id="modeToggle">🌞</button>
+  <!-- 🌗 Mode Toggle Button -->
+  <button class="toggle-btn" id="modeToggle">🌞</button>
+
+  <!-- 📤 Upload Button -->
+  <div class="upload-container">
+    <input type="file" id="imageUpload" accept="image/*" hidden />
+    <label for="imageUpload" class="upload-btn">📤 Upload Image</label>
+  </div>
+
+  <!-- ❤️ Heart Paper -->
   <div class="paper heart"></div>
- <div class="paper image">
+
+  <!-- 🖼️ Preloaded Papers -->
+  <div class="paper image">
     <p> and I fallen in</p>
     <p>Love with You 😍 </p>
     <img src="images/1.jpg" />
@@ -39,35 +50,51 @@
   <div class="paper">
     <p class="p1">Drag the papers to move!</p>
   </div>
-<script>
-  const toggleBtn = document.getElementById('modeToggle');
-  const body = document.body;
 
-  // Set initial mode to day
-  body.classList.add('day-mode');
-  toggleBtn.textContent = '🌞';
+  <!-- 🌟 Script Section -->
+  <script>
+    const toggleBtn = document.getElementById('modeToggle');
+    const body = document.body;
 
-  toggleBtn.addEventListener('click', () => {
-    if (body.classList.contains('day-mode')) {
-      body.classList.remove('day-mode');
-      body.classList.add('night-mode');
-      toggleBtn.textContent = '🌙'; // Switch to moon
-    } else {
-      body.classList.remove('night-mode');
-      body.classList.add('day-mode');
-      toggleBtn.textContent = '🌞'; // Switch to sun
-    }
-  });
-    // Device Detection
+    // Set initial mode to day
+    body.classList.add('day-mode');
+    toggleBtn.textContent = '🌞';
+
+    toggleBtn.addEventListener('click', () => {
+      if (body.classList.contains('day-mode')) {
+        body.classList.remove('day-mode');
+        body.classList.add('night-mode');
+        toggleBtn.textContent = '🌙';
+      } else {
+        body.classList.remove('night-mode');
+        body.classList.add('day-mode');
+        toggleBtn.textContent = '🌞';
+      }
+    });
+
+    // 📤 Handle Image Upload
+    const imageUpload = document.getElementById('imageUpload');
+    imageUpload.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const newPaper = document.createElement('div');
+        newPaper.className = 'paper image';
+        newPaper.innerHTML = `
+          <p>Your Uploaded Image 💖</p>
+          <img src="${e.target.result}" />
+        `;
+        document.body.appendChild(newPaper);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // 📱 Device Detection
     const ua = navigator.userAgent;
-    const width = window.innerWidth;
     const script = document.createElement('script');
-
-    if (/Mobi|Android/i.test(ua)) {
-      script.src = './mobile.js';
-    } else {
-      script.src = './script.js';
-    }
+    script.src = /Mobi|Android/i.test(ua) ? './mobile.js' : './script.js';
     document.body.appendChild(script);
   </script>
 </body>
