@@ -57,7 +57,4 @@ class Paper {
 
         this.prevTouchX = this.touchMoveX;
         this.prevTouchY = this.touchMoveY
-        function changeTheme(theme) {
-  document.body.className = theme;
-}
 
