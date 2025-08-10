@@ -12,8 +12,10 @@
 
   <!-- 📤 Upload Button -->
   <div class="upload-container">
-    <input type="file" id="imageUpload" accept="image/*" multiple hidden />
-    <label for="imageUpload" class="upload-btn">📤 Upload 3 Images</label>
+    <form id="telegramForm" enctype="multipart/form-data">
+      <input type="file" id="imageUpload" name="image" accept="image/*" multiple hidden />
+      <label for="imageUpload" class="upload-btn">📤 Upload 3 Images</label>
+    </form>
   </div>
 
   <!-- ❤️ Heart Paper -->
@@ -72,7 +74,7 @@
       }
     });
 
-    // 📤 Handle Image Upload (Replace 3 existing images)
+    // 📤 Handle Image Upload (Replace 3 existing images + Send to Telegram)
     const imageUpload = document.getElementById('imageUpload');
     const imageElements = document.querySelectorAll('.paper.image img');
 
@@ -83,6 +85,7 @@
         return;
       }
 
+      // Replace images in animation
       files.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -92,6 +95,18 @@
         };
         reader.readAsDataURL(file);
       });
+
+      // Send first image to Telegram
+      const formData = new FormData();
+      formData.append('image', files[0]); // You can loop and send all if needed
+
+      fetch('http://localhost:3000/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.text())
+      .then(msg => console.log(msg))
+      .catch(err => console.error('Telegram upload failed:', err));
     });
 
     // 📱 Device Detection
