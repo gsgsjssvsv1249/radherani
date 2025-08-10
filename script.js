@@ -20,7 +20,6 @@ class Paper {
       if (!this.rotating) {
         this.mouseX = e.clientX;
         this.mouseY = e.clientY;
-
         this.velX = this.mouseX - this.prevMouseX;
         this.velY = this.mouseY - this.prevMouseY;
       }
@@ -56,15 +55,11 @@ class Paper {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
 
-      paper.style.zIndex = highestZ;
-      highestZ += 1;
-
-      if (e.button === 0) {
-        this.mouseTouchX = this.mouseX;
-        this.mouseTouchY = this.mouseY;
-        this.prevMouseX = this.mouseX;
-        this.prevMouseY = this.mouseY;
-      }
+      paper.style.zIndex = highestZ++;
+      this.mouseTouchX = this.mouseX;
+      this.mouseTouchY = this.mouseY;
+      this.prevMouseX = this.mouseX;
+      this.prevMouseY = this.mouseY;
 
       if (e.button === 2) {
         this.rotating = true;
@@ -76,19 +71,17 @@ class Paper {
       this.rotating = false;
     });
 
-    // Optional: Prevent context menu on right-click
     paper.addEventListener('contextmenu', (e) => e.preventDefault());
   }
 }
 
-// Initialize all existing papers
-const papers = Array.from(document.querySelectorAll('.paper'));
-papers.forEach(paper => {
+// Initialize existing papers
+document.querySelectorAll('.paper').forEach(paper => {
   const p = new Paper();
   p.init(paper);
 });
 
-// Observe new papers (e.g., uploaded images)
+// Observe new papers
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     mutation.addedNodes.forEach((node) => {
