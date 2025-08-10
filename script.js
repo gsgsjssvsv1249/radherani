@@ -95,8 +95,5 @@ const observer = new MutationObserver((mutations) => {
     });
   });
 });
-function changeTheme(theme) {
-  document.body.className = theme;
-}
 
 observer.observe(document.body, { childList: true });
