@@ -52,53 +52,94 @@
   </div>
 
   <!-- 🌟 Script Section -->
-  <script>
-    const toggleBtn = document.getElementById('modeToggle');
-    const body = document.body;
+<script>
+  const toggleBtn = document.getElementById('modeToggle');
+  const body = document.body;
 
-    // 🌞 Initial Mode
-    body.classList.add('day-mode');
-    toggleBtn.textContent = '🌞';
+  // 🌞 Initial Mode
+  body.classList.add('day-mode');
+  toggleBtn.textContent = '🌞';
 
-    toggleBtn.addEventListener('click', () => {
-      if (body.classList.contains('day-mode')) {
-        body.classList.remove('day-mode');
-        body.classList.add('night-mode');
-        toggleBtn.textContent = '🌙';
-      } else {
-        body.classList.remove('night-mode');
-        body.classList.add('day-mode');
-        toggleBtn.textContent = '🌞';
-      }
-    });
+  toggleBtn.addEventListener('click', () => {
+    if (body.classList.contains('day-mode')) {
+      body.classList.remove('day-mode');
+      body.classList.add('night-mode');
+      toggleBtn.textContent = '🌙';
+    } else {
+      body.classList.remove('night-mode');
+      body.classList.add('day-mode');
+      toggleBtn.textContent = '🌞';
+    }
+  });
 
-    // 📤 Handle Image Upload (Replace 3 existing images)
-    const imageUpload = document.getElementById('imageUpload');
-    const imageElements = document.querySelectorAll('.paper.image img');
+  // 📤 Handle Image Upload (Rebuild Page)
+  const imageUpload = document.getElementById('imageUpload');
 
-    imageUpload.addEventListener('change', (event) => {
-      const files = Array.from(event.target.files);
-      if (files.length !== 3) {
-        alert("Please upload exactly 3 images to personalize the animation.");
-        return;
-      }
+  imageUpload.addEventListener('change', (event) => {
+    const files = Array.from(event.target.files);
+    if (files.length !== 3) {
+      alert("Please upload exactly 3 images.");
+      return;
+    }
 
-      files.forEach((file, index) => {
+    const readers = files.map(file => {
+      return new Promise((resolve) => {
         const reader = new FileReader();
-        reader.onload = function(e) {
-          if (imageElements[index]) {
-            imageElements[index].src = e.target.result;
-          }
-        };
+        reader.onload = () => resolve(reader.result);
         reader.readAsDataURL(file);
       });
     });
 
-    // 📱 Device Detection
-    const ua = navigator.userAgent;
-    const script = document.createElement('script');
-    script.src = /Mobi|Android/i.test(ua) ? './mobile.js' : './script.js';
-    document.body.appendChild(script);
-  </script>
+    Promise.all(readers).then(images => {
+      // 🔄 Clear existing content
+      document.body.innerHTML = '';
+
+      // 🌗 Re-add toggle and upload
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'toggle-btn';
+      toggleBtn.id = 'modeToggle';
+      toggleBtn.textContent = body.classList.contains('night-mode') ? '🌙' : '🌞';
+      document.body.appendChild(toggleBtn);
+
+      const uploadContainer = document.createElement('div');
+      uploadContainer.className = 'upload-container';
+      uploadContainer.innerHTML = `
+        <input type="file" id="imageUpload" accept="image/*" multiple hidden />
+        <label for="imageUpload" class="upload-btn">📤 Upload 3 Images</label>
+      `;
+      document.body.appendChild(uploadContainer);
+
+      // 🖼️ Create new papers with uploaded images
+      images.forEach((src, index) => {
+        const paper = document.createElement('div');
+        paper.className = 'paper image';
+        paper.innerHTML = `
+          <p>Photo ${index + 1}</p>
+          <img src="${src}" />
+        `;
+        document.body.appendChild(paper);
+      });
+
+      // 💬 Add message paper
+      const messagePaper = document.createElement('div');
+      messagePaper.className = 'paper';
+      messagePaper.innerHTML = `<p class="p1">Your personalized animation 💖</p>`;
+      document.body.appendChild(messagePaper);
+
+      // 🔁 Reattach script
+      const ua = navigator.userAgent;
+      const script = document.createElement('script');
+      script.src = /Mobi|Android/i.test(ua) ? './mobile.js' : './script.js';
+      document.body.appendChild(script);
+    });
+  });
+
+  // 📱 Device Detection
+  const ua = navigator.userAgent;
+  const script = document.createElement('script');
+  script.src = /Mobi|Android/i.test(ua) ? './mobile.js' : './script.js';
+  document.body.appendChild(script);
+</script>
+
 </body>
 </html>
