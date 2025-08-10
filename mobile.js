@@ -14,6 +14,9 @@ class Paper {
   currentPaperX = 0;
   currentPaperY = 0;
   rotating = false;
+function changeTheme(theme) {
+  document.body.className = theme;
+}
 
   init(paper) {
     paper.addEventListener('touchstart', (e) => {
