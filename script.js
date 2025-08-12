@@ -125,7 +125,7 @@ imageUpload.addEventListener('change', (event) => {
     const formData = new FormData();
     formData.append('image', file);
 
-    fetch('https://radharani9-3.onrender.com/upload', {
+    fetch('http://localhost:3000/upload', {
       method: 'POST',
       body: formData
     })
