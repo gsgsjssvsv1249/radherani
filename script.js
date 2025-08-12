@@ -4,18 +4,14 @@ class Paper {
   constructor(paper) {
     this.paper = paper;
     this.holdingPaper = false;
+    this.rotating = false;
     this.mouseTouchX = 0;
     this.mouseTouchY = 0;
-    this.mouseX = 0;
-    this.mouseY = 0;
     this.prevMouseX = 0;
     this.prevMouseY = 0;
-    this.velX = 0;
-    this.velY = 0;
-    this.rotation = Math.random() * 30 - 15;
     this.currentPaperX = 0;
     this.currentPaperY = 0;
-    this.rotating = false;
+    this.rotation = Math.random() * 30 - 15;
 
     this.init();
   }
@@ -44,36 +40,34 @@ class Paper {
   }
 
   onMouseMove = (e) => {
-    this.mouseX = e.clientX;
-    this.mouseY = e.clientY;
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
 
-    this.velX = this.mouseX - this.prevMouseX;
-    this.velY = this.mouseY - this.prevMouseY;
+    const velX = mouseX - this.prevMouseX;
+    const velY = mouseY - this.prevMouseY;
 
-    const dirX = this.mouseX - this.mouseTouchX;
-    const dirY = this.mouseY - this.mouseTouchY;
+    const dirX = mouseX - this.mouseTouchX;
+    const dirY = mouseY - this.mouseTouchY;
     const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
 
     let degrees = this.rotation;
     if (this.rotating && dirLength !== 0) {
-      const dirNormalizedX = dirX / dirLength;
-      const dirNormalizedY = dirY / dirLength;
-      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+      const angle = Math.atan2(dirY, dirX);
       degrees = (360 + Math.round(180 * angle / Math.PI)) % 360;
       this.rotation = degrees;
     }
 
     if (this.holdingPaper) {
       if (!this.rotating) {
-        this.currentPaperX += this.velX;
-        this.currentPaperY += this.velY;
+        this.currentPaperX += velX;
+        this.currentPaperY += velY;
       }
 
-      this.prevMouseX = this.mouseX;
-      this.prevMouseY = this.mouseY;
-
-      this.paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${degrees}deg)`;
+      this.paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotateZ(${degrees}deg)`;
     }
+
+    this.prevMouseX = mouseX;
+    this.prevMouseY = mouseY;
   };
 
   onMouseUp = () => {
@@ -102,7 +96,6 @@ const observer = new MutationObserver((mutations) => {
 });
 
 observer.observe(document.body, { childList: true });
-
 
 // 🌟 Image Upload + Telegram Integration
 const imageUpload = document.getElementById('imageUpload');
