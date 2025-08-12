@@ -26,6 +26,7 @@ class Paper {
       this.prevTouchX = this.touchStartX;
       this.prevTouchY = this.touchStartY;
 
+      // Two-finger touch to rotate
       if (e.touches.length === 2) {
         this.rotating = true;
       }
@@ -40,26 +41,27 @@ class Paper {
       this.velX = this.touchMoveX - this.prevTouchX;
       this.velY = this.touchMoveY - this.prevTouchY;
 
-      const dirX = this.touchMoveX - this.touchStartX;
-      const dirY = this.touchMoveY - this.touchStartY;
-      const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
-      const dirNormalizedX = dirX / dirLength;
-      const dirNormalizedY = dirY / dirLength;
-
-      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
-      let degrees = 180 * angle / Math.PI;
-      degrees = (360 + Math.round(degrees)) % 360;
-
-      if (this.rotating) {
-        this.rotation = degrees;
-      }
+      this.prevTouchX = this.touchMoveX;
+      this.prevTouchY = this.touchMoveY;
 
       if (this.holdingPaper) {
-        this.currentPaperX += this.velX;
-        this.currentPaperY += this.velY;
+        if (this.rotating) {
+          const dirX = this.touchMoveX - this.touchStartX;
+          const dirY = this.touchMoveY - this.touchStartY;
+          const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
 
-        this.prevTouchX = this.touchMoveX;
-        this.prevTouchY = this.touchMoveY;
+          if (dirLength !== 0) {
+            const dirNormalizedX = dirX / dirLength;
+            const dirNormalizedY = dirY / dirLength;
+            const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+            let degrees = 180 * angle / Math.PI;
+            degrees = (360 + Math.round(degrees)) % 360;
+            this.rotation = degrees;
+          }
+        } else {
+          this.currentPaperX += this.velX;
+          this.currentPaperY += this.velY;
+        }
 
         paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
       }
@@ -123,7 +125,7 @@ imageUpload.addEventListener('change', (event) => {
     const formData = new FormData();
     formData.append('image', file);
 
-    fetch('http://localhost:3000/upload', {
+    fetch('https://radharani9-3.onrender.com/upload', {
       method: 'POST',
       body: formData
     })
