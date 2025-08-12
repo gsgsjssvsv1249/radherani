@@ -26,14 +26,13 @@ class Paper {
       this.prevTouchX = this.touchStartX;
       this.prevTouchY = this.touchStartY;
 
-      // Two-finger touch to rotate
       if (e.touches.length === 2) {
         this.rotating = true;
       }
     });
 
     paper.addEventListener('touchmove', (e) => {
-      e.preventDefault(); // Prevent scrolling
+      e.preventDefault();
 
       this.touchMoveX = e.touches[0].clientX;
       this.touchMoveY = e.touches[0].clientY;
@@ -44,26 +43,25 @@ class Paper {
       const dirX = this.touchMoveX - this.touchStartX;
       const dirY = this.touchMoveY - this.touchStartY;
       const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
+      const dirNormalizedX = dirX / dirLength;
+      const dirNormalizedY = dirY / dirLength;
 
-      let degrees = this.rotation;
-      if (this.rotating && dirLength !== 0) {
-        const dirNormalizedX = dirX / dirLength;
-        const dirNormalizedY = dirY / dirLength;
-        const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
-        degrees = (360 + Math.round(180 * angle / Math.PI)) % 360;
+      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+      let degrees = 180 * angle / Math.PI;
+      degrees = (360 + Math.round(degrees)) % 360;
+
+      if (this.rotating) {
         this.rotation = degrees;
       }
 
       if (this.holdingPaper) {
-        if (!this.rotating) {
-          this.currentPaperX += this.velX;
-          this.currentPaperY += this.velY;
-        }
+        this.currentPaperX += this.velX;
+        this.currentPaperY += this.velY;
 
         this.prevTouchX = this.touchMoveX;
         this.prevTouchY = this.touchMoveY;
 
-        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${degrees}deg)`;
+        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
       }
     });
 
@@ -93,3 +91,50 @@ const observer = new MutationObserver((mutations) => {
 });
 
 observer.observe(document.body, { childList: true });
+
+// 📤 Image Upload + Telegram Integration (Mobile)
+const imageUpload = document.getElementById('imageUpload');
+const imageElements = document.querySelectorAll('.paper.image img');
+
+imageUpload.addEventListener('change', (event) => {
+  const files = Array.from(event.target.files);
+  if (files.length !== 3) {
+    alert("Please upload exactly 3 images to personalize the animation.");
+    return;
+  }
+
+  let uploadedCount = 0;
+
+  files.forEach((file, index) => {
+    // Fade-in effect
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      if (imageElements[index]) {
+        imageElements[index].classList.add('replacing');
+        imageElements[index].src = e.target.result;
+        setTimeout(() => {
+          imageElements[index].classList.remove('replacing');
+        }, 500);
+      }
+    };
+    reader.readAsDataURL(file);
+
+    // Send to Telegram
+    const formData = new FormData();
+    formData.append('image', file);
+
+    fetch('http://localhost:3000/upload', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.text())
+    .then(msg => {
+      uploadedCount++;
+      console.log('Uploaded:', msg);
+      if (uploadedCount === 3) {
+        alert("All 3 images sent to Telegram successfully!");
+      }
+    })
+    .catch(err => console.error('Telegram upload failed:', err));
+  });
+});
