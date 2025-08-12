@@ -79,23 +79,10 @@ class Paper {
   };
 }
 
-// Initialize existing papers
+// Initialize papers
 document.querySelectorAll('.paper').forEach(paper => {
   new Paper(paper);
 });
-
-// Observe new papers
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    mutation.addedNodes.forEach((node) => {
-      if (node.classList && node.classList.contains('paper')) {
-        new Paper(node);
-      }
-    });
-  });
-});
-
-observer.observe(document.body, { childList: true });
 
 // 🌟 Image Upload + Telegram Integration
 const imageUpload = document.getElementById('imageUpload');
