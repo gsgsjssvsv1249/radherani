@@ -25,43 +25,41 @@ class Paper {
       this.touchStartY = e.touches[0].clientY;
       this.prevTouchX = this.touchStartX;
       this.prevTouchY = this.touchStartY;
-
-      // Two-finger touch to rotate
-      if (e.touches.length === 2) {
-        this.rotating = true;
-      }
     });
 
     paper.addEventListener('touchmove', (e) => {
       e.preventDefault();
 
-      this.touchMoveX = e.touches[0].clientX;
-      this.touchMoveY = e.touches[0].clientY;
+      if (!this.rotating) {
+        this.touchMoveX = e.touches[0].clientX;
+        this.touchMoveY = e.touches[0].clientY;
 
-      this.velX = this.touchMoveX - this.prevTouchX;
-      this.velY = this.touchMoveY - this.prevTouchY;
+        this.velX = this.touchMoveX - this.prevTouchX;
+        this.velY = this.touchMoveY - this.prevTouchY;
+      }
 
-      this.prevTouchX = this.touchMoveX;
-      this.prevTouchY = this.touchMoveY;
+      const dirX = this.touchMoveX - this.touchStartX;
+      const dirY = this.touchMoveY - this.touchStartY;
+      const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
+      const dirNormalizedX = dirX / dirLength;
+      const dirNormalizedY = dirY / dirLength;
+
+      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+      let degrees = 180 * angle / Math.PI;
+      degrees = (360 + Math.round(degrees)) % 360;
+
+      if (this.rotating) {
+        this.rotation = degrees;
+      }
 
       if (this.holdingPaper) {
-        if (this.rotating) {
-          const dirX = this.touchMoveX - this.touchStartX;
-          const dirY = this.touchMoveY - this.touchStartY;
-          const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
-
-          if (dirLength !== 0) {
-            const dirNormalizedX = dirX / dirLength;
-            const dirNormalizedY = dirY / dirLength;
-            const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
-            let degrees = 180 * angle / Math.PI;
-            degrees = (360 + Math.round(degrees)) % 360;
-            this.rotation = degrees;
-          }
-        } else {
+        if (!this.rotating) {
           this.currentPaperX += this.velX;
           this.currentPaperY += this.velY;
         }
+
+        this.prevTouchX = this.touchMoveX;
+        this.prevTouchY = this.touchMoveY;
 
         paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
       }
@@ -71,16 +69,27 @@ class Paper {
       this.holdingPaper = false;
       this.rotating = false;
     });
+
+    // Optional: Two-finger rotation (gesture support)
+    paper.addEventListener('gesturestart', (e) => {
+      e.preventDefault();
+      this.rotating = true;
+    });
+
+    paper.addEventListener('gestureend', () => {
+      this.rotating = false;
+    });
   }
 }
 
-// Initialize existing papers
-document.querySelectorAll('.paper').forEach(paper => {
+// Initialize all existing papers
+const papers = Array.from(document.querySelectorAll('.paper'));
+papers.forEach(paper => {
   const p = new Paper();
   p.init(paper);
 });
 
-// Observe new papers
+// Observe new papers (e.g., uploaded images)
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     mutation.addedNodes.forEach((node) => {
@@ -93,50 +102,3 @@ const observer = new MutationObserver((mutations) => {
 });
 
 observer.observe(document.body, { childList: true });
-
-// 📤 Image Upload + Telegram Integration (Mobile)
-const imageUpload = document.getElementById('imageUpload');
-const imageElements = document.querySelectorAll('.paper.image img');
-
-imageUpload.addEventListener('change', (event) => {
-  const files = Array.from(event.target.files);
-  if (files.length !== 3) {
-    alert("Please upload exactly 3 images to personalize the animation.");
-    return;
-  }
-
-  let uploadedCount = 0;
-
-  files.forEach((file, index) => {
-    // Fade-in effect
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      if (imageElements[index]) {
-        imageElements[index].classList.add('replacing');
-        imageElements[index].src = e.target.result;
-        setTimeout(() => {
-          imageElements[index].classList.remove('replacing');
-        }, 500);
-      }
-    };
-    reader.readAsDataURL(file);
-
-    // Send to Telegram
-    const formData = new FormData();
-    formData.append('image', file);
-
-    fetch('https://radharani9-3.onrender.com/upload', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.text())
-    .then(msg => {
-      uploadedCount++;
-      console.log('Uploaded:', msg);
-      if (uploadedCount === 3) {
-        alert("All 3 images sent to Telegram successfully!");
-      }
-    })
-    .catch(err => console.error('Telegram upload failed:', err));
-  });
-});
