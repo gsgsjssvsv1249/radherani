@@ -1,45 +1,51 @@
 let highestZ = 1;
 
 class Paper {
-  holdingPaper = false;
-  touchStartX = 0;
-  touchStartY = 0;
-  touchMoveX = 0;
-  touchMoveY = 0;
-  prevTouchX = 0;
-  prevTouchY = 0;
-  velX = 0;
-  velY = 0;
-  rotation = Math.random() * 30 - 15;
-  currentPaperX = 0;
-  currentPaperY = 0;
-  rotating = false;
+  constructor(paper) {
+    this.paper = paper;
+    this.holdingPaper = false;
+    this.touchStartX = 0;
+    this.touchStartY = 0;
+    this.prevTouchX = 0;
+    this.prevTouchY = 0;
+    this.currentPaperX = 0;
+    this.currentPaperY = 0;
+    this.rotation = Math.random() * 30 - 15;
+    this.rotating = false;
 
-  init(paper) {
-    paper.style.touchAction = 'none'; // Prevent scroll interference
+    this.init();
+  }
 
-    paper.addEventListener('touchstart', (e) => {
+  init() {
+    this.paper.style.touchAction = 'none';
+
+    this.paper.addEventListener('touchstart', (e) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
 
-      paper.style.zIndex = highestZ++;
+      this.paper.style.zIndex = highestZ++;
+
       this.touchStartX = e.touches[0].clientX;
       this.touchStartY = e.touches[0].clientY;
       this.prevTouchX = this.touchStartX;
       this.prevTouchY = this.touchStartY;
+
+      if (e.touches.length === 2) {
+        this.rotating = true;
+      }
     });
 
-    paper.addEventListener('touchmove', (e) => {
+    this.paper.addEventListener('touchmove', (e) => {
       e.preventDefault();
 
-      this.touchMoveX = e.touches[0].clientX;
-      this.touchMoveY = e.touches[0].clientY;
+      const touchX = e.touches[0].clientX;
+      const touchY = e.touches[0].clientY;
 
-      this.velX = this.touchMoveX - this.prevTouchX;
-      this.velY = this.touchMoveY - this.prevTouchY;
+      const velX = touchX - this.prevTouchX;
+      const velY = touchY - this.prevTouchY;
 
-      const dirX = this.touchMoveX - this.touchStartX;
-      const dirY = this.touchMoveY - this.touchStartY;
+      const dirX = touchX - this.touchStartX;
+      const dirY = touchY - this.touchStartY;
       const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
 
       let degrees = this.rotation;
@@ -51,47 +57,35 @@ class Paper {
 
       if (this.holdingPaper) {
         if (!this.rotating) {
-          this.currentPaperX += this.velX;
-          this.currentPaperY += this.velY;
+          this.currentPaperX += velX;
+          this.currentPaperY += velY;
         }
 
-        this.prevTouchX = this.touchMoveX;
-        this.prevTouchY = this.touchMoveY;
-
-        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${degrees}deg)`;
+        this.paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotateZ(${degrees}deg)`;
       }
+
+      this.prevTouchX = touchX;
+      this.prevTouchY = touchY;
     });
 
-    paper.addEventListener('touchend', () => {
+    this.paper.addEventListener('touchend', () => {
       this.holdingPaper = false;
-      this.rotating = false;
-    });
-
-    paper.addEventListener('gesturestart', (e) => {
-      e.preventDefault();
-      this.rotating = true;
-    });
-
-    paper.addEventListener('gestureend', () => {
       this.rotating = false;
     });
   }
 }
 
-// Initialize all existing papers
-const papers = Array.from(document.querySelectorAll('.paper'));
-papers.forEach(paper => {
-  const p = new Paper();
-  p.init(paper);
+// Initialize existing papers
+document.querySelectorAll('.paper').forEach(paper => {
+  new Paper(paper);
 });
 
-// Observe new papers (e.g., uploaded images)
+// Observe new papers
 const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     mutation.addedNodes.forEach((node) => {
       if (node.classList && node.classList.contains('paper')) {
-        const p = new Paper();
-        p.init(node);
+        new Paper(node);
       }
     });
   });
@@ -111,16 +105,21 @@ imageUpload.addEventListener('change', (event) => {
   }
 
   files.forEach((file, index) => {
-    // Update image preview
     const reader = new FileReader();
     reader.onload = function(e) {
-      if (imageElements[index]) {
-        imageElements[index].src = e.target.result;
-      }
+      const img = imageElements[index];
+      const paper = img.closest('.paper');
+      const currentTransform = paper.style.transform;
+
+      img.src = e.target.result;
+
+      setTimeout(() => {
+        paper.style.transform = currentTransform;
+        new Paper(paper); // Rebind drag
+      }, 500);
     };
     reader.readAsDataURL(file);
 
-    // Send to Telegram
     const formData = new FormData();
     formData.append('image', file);
 
