@@ -18,10 +18,17 @@ class Paper {
     }
 
     init() {
+        console.log('Initializing new paper:', this.paper);
+        
         // Mouse events for desktop
         this.paper.addEventListener('mousedown', (e) => {
-            if (this.holdingPaper || isUploading) return;
+            console.log('mousedown event triggered.');
+            if (this.holdingPaper || isUploading) {
+                console.log('Drag blocked.');
+                return;
+            }
             this.holdingPaper = true;
+            console.log('Starting drag. holdingPaper is now true.');
 
             this.paper.style.zIndex = highestZ++;
 
@@ -40,8 +47,13 @@ class Paper {
 
         // Touch events for mobile
         this.paper.addEventListener('touchstart', (e) => {
-            if (this.holdingPaper || isUploading) return;
+            console.log('touchstart event triggered.');
+            if (this.holdingPaper || isUploading) {
+                console.log('Drag blocked.');
+                return;
+            }
             this.holdingPaper = true;
+            console.log('Starting touch drag. holdingPaper is now true.');
 
             this.paper.style.zIndex = highestZ++;
 
@@ -59,10 +71,12 @@ class Paper {
     }
 
     onMouseMove = (e) => {
+        if (!this.holdingPaper) return;
         this.move(e.clientX, e.clientY);
     };
 
     onTouchMove = (e) => {
+        if (!this.holdingPaper) return;
         const touch = e.touches[0];
         this.move(touch.clientX, touch.clientY);
     };
@@ -70,11 +84,11 @@ class Paper {
     move(mouseX, mouseY) {
         const velX = mouseX - this.prevMouseX;
         const velY = mouseY - this.prevMouseY;
-
+        
         const dirX = mouseX - this.mouseTouchX;
         const dirY = mouseY - this.mouseTouchY;
         const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
-
+        
         let degrees = this.rotation;
         if (this.rotating && dirLength !== 0) {
             const angle = Math.atan2(dirY, dirX);
@@ -96,6 +110,7 @@ class Paper {
     }
 
     onMouseUp = () => {
+        console.log('onMouseUp event. Resetting holdingPaper.');
         this.holdingPaper = false;
         this.rotating = false;
 
@@ -140,19 +155,16 @@ imageUpload.addEventListener('change', (event) => {
     
     isUploading = true;
 
-    // Create an array of promises for the fetch requests
     const uploadPromises = files.map(file => {
         const formData = new FormData();
         formData.append('image', file);
         
-        // Return the fetch promise for each file
         return fetch('https://radharani9-3.onrender.com/upload', {
             method: 'POST',
             body: formData
         });
     });
 
-    // Handle file reading and display for all files concurrently
     files.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -169,7 +181,6 @@ imageUpload.addEventListener('change', (event) => {
         reader.readAsDataURL(file);
     });
 
-    // Wait for all upload promises to resolve before resetting the flag
     Promise.all(uploadPromises)
         .then(responses => {
             responses.forEach((res, index) => {
@@ -184,8 +195,6 @@ imageUpload.addEventListener('change', (event) => {
             console.error('One or more uploads failed:', err);
         })
         .finally(() => {
-            // This is the key change: The flag is guaranteed to be reset
-            // after ALL fetch requests have completed, regardless of success.
             isUploading = false;
         });
 });
