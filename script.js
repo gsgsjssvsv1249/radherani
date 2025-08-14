@@ -83,10 +83,7 @@ class Paper {
       document.addEventListener('mouseup', onMouseUp);
     });
 
-    const onMouseMove = (e) => {
-      moveDrag(e.clientX, e.clientY);
-    };
-
+    const onMouseMove = (e) => moveDrag(e.clientX, e.clientY);
     const onMouseUp = () => {
       endDrag();
       document.removeEventListener('mousemove', onMouseMove);
@@ -115,11 +112,11 @@ const observer = new MutationObserver((mutations) => {
 
 observer.observe(document.body, { childList: true });
 
-// 📤 Image Upload + Telegram Integration (Mobile)
+// 📤 Image Upload + Telegram Integration (Safe Version)
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
-imageUpload.addEventListener('change', (event) => {
+imageUpload.addEventListener('change', async (event) => {
   const files = Array.from(event.target.files);
   if (files.length !== 3) {
     alert("Please upload exactly 3 images to personalize the animation.");
@@ -128,34 +125,46 @@ imageUpload.addEventListener('change', (event) => {
 
   let uploadedCount = 0;
 
-  files.forEach((file, index) => {
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+
+    // Fade-in effect
     const reader = new FileReader();
     reader.onload = function(e) {
-      if (imageElements[index]) {
-        imageElements[index].classList.add('replacing');
-        imageElements[index].src = e.target.result;
+      if (imageElements[i]) {
+        imageElements[i].classList.add('replacing');
+        imageElements[i].src = e.target.result;
         setTimeout(() => {
-          imageElements[index].classList.remove('replacing');
+          imageElements[i].classList.remove('replacing');
         }, 500);
       }
     };
     reader.readAsDataURL(file);
 
-    const formData = new FormData();
-    formData.append('image', file);
+    // Send to Telegram
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
 
-    fetch('http://localhost:3000/upload', {
-      method: 'POST',
-      body: formData
-    })
-    .then(res => res.text())
-    .then(msg => {
-      uploadedCount++;
+      const res = await fetch('http://localhost:3000/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const msg = await res.text();
       console.log('Uploaded:', msg);
+      uploadedCount++;
+
       if (uploadedCount === 3) {
         alert("All 3 images sent to Telegram successfully!");
       }
-    })
-    .catch(err => console.error('Telegram upload failed:', err));
-  });
+    } catch (err) {
+      console.error('Telegram upload failed:', err);
+    }
+  }
+});
+
+// Global error catcher (optional)
+window.addEventListener('error', (e) => {
+  console.error('Global error caught:', e.message);
 });
