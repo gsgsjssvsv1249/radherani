@@ -17,67 +17,6 @@ body.night-mode {
   transition: background 0.5s ease, color 0.5s ease;
 }
 
-/* 🌈 THEME VARIANTS */
-body.theme-romantic {
-  background: linear-gradient(to bottom right, #ffe4e1, #ffc0cb);
-  color: maroon;
-  font-family: 'Zeyada', cursive;
-}
-
-body.theme-cosmic {
-  background-image: url("images/stars.jpg");
-  background-size: cover;
-  background-position: center;
-  color: #ffffff;
-}
-
-body.theme-sakura {
-  background-image: url("images/sakura.jpg");
-  background-size: cover;
-  background-position: center;
-  color: #333;
-}
-
-body.theme-retro {
-  background-color: #000;
-  color: #fff;
-  filter: grayscale(100%);
-}
-
-body.theme-fairy {
-  background: linear-gradient(to bottom, #a0e0c0, #f0c0f0);
-  color: #2e2e2e;
-}
-
-/* 🌈 Theme Switcher Styles */
-.theme-switcher {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  z-index: 9999;
-}
-
-.theme-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.theme-menu.hidden {
-  display: none;
-}
-
-.theme-menu button {
-  background: #ff4081;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'Short Stack', cursive;
-}
-
 /* 📝 Paper Styling */
 body {
   height: 100vh;
