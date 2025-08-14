@@ -1,147 +1,143 @@
 let highestZ = 1;
-let isUploading = false; // Flag to prevent uploads during dragging
 
 class Paper {
-    constructor(paper) {
-        this.paper = paper;
-        this.holdingPaper = false;
-        this.rotating = false;
-        this.mouseTouchX = 0;
-        this.mouseTouchY = 0;
-        this.prevMouseX = 0;
-        this.prevMouseY = 0;
-        this.currentPaperX = 0;
-        this.currentPaperY = 0;
-        this.rotation = Math.random() * 30 - 15;
+  holdingPaper = false;
+  mouseTouchX = 0;
+  mouseTouchY = 0;
+  mouseX = 0;
+  mouseY = 0;
+  prevMouseX = 0;
+  prevMouseY = 0;
+  velX = 0;
+  velY = 0;
+  rotation = Math.random() * 30 - 15;
+  currentPaperX = 0;
+  currentPaperY = 0;
+  rotating = false;
 
-        this.init();
-    }
+  init(paper) {
+    document.addEventListener('mousemove', (e) => {
+      if (!this.rotating) {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+        this.velX = this.mouseX - this.prevMouseX;
+        this.velY = this.mouseY - this.prevMouseY;
+      }
 
-    init() {
-        this.paper.addEventListener('mousedown', (e) => {
-            if (this.holdingPaper || isUploading) return; // Prevent dragging if uploading
-            this.holdingPaper = true;
+      const dirX = e.clientX - this.mouseTouchX;
+      const dirY = e.clientY - this.mouseTouchY;
+      const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
+      const dirNormalizedX = dirX / dirLength;
+      const dirNormalizedY = dirY / dirLength;
 
-            this.paper.style.zIndex = highestZ++;
+      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+      let degrees = 180 * angle / Math.PI;
+      degrees = (360 + Math.round(degrees)) % 360;
 
-            this.mouseTouchX = e.clientX;
-            this.mouseTouchY = e.clientY;
-            this.prevMouseX = e.clientX;
-            this.prevMouseY = e.clientY;
+      if (this.rotating) {
+        this.rotation = degrees;
+      }
 
-            if (e.button === 2) {
-                this.rotating = true;
-            }
-
-            document.addEventListener('mousemove', this.onMouseMove);
-            document.addEventListener('mouseup', this.onMouseUp);
-        });
-
-        this.paper.addEventListener('contextmenu', (e) => e.preventDefault());
-    }
-
-    onMouseMove = (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-
-        const velX = mouseX - this.prevMouseX;
-        const velY = mouseY - this.prevMouseY;
-
-        const dirX = mouseX - this.mouseTouchX;
-        const dirY = mouseY - this.mouseTouchY;
-        const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
-
-        let degrees = this.rotation;
-        if (this.rotating && dirLength !== 0) {
-            const angle = Math.atan2(dirY, dirX);
-            degrees = (360 + Math.round(180 * angle / Math.PI)) % 360;
-            this.rotation = degrees;
+      if (this.holdingPaper) {
+        if (!this.rotating) {
+          this.currentPaperX += this.velX;
+          this.currentPaperY += this.velY;
         }
 
-        if (this.holdingPaper) {
-            if (!this.rotating) {
-                this.currentPaperX += velX;
-                this.currentPaperY += velY;
-            }
+        this.prevMouseX = this.mouseX;
+        this.prevMouseY = this.mouseY;
 
-            this.paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotateZ(${degrees}deg)`;
-        }
+        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
+      }
+    });
 
-        this.prevMouseX = mouseX;
-        this.prevMouseY = mouseY;
-    };
+    paper.addEventListener('mousedown', (e) => {
+      if (this.holdingPaper) return;
+      this.holdingPaper = true;
 
-    onMouseUp = () => {
-        this.holdingPaper = false;
-        this.rotating = false;
+      paper.style.zIndex = highestZ++;
+      this.mouseTouchX = this.mouseX;
+      this.mouseTouchY = this.mouseY;
+      this.prevMouseX = this.mouseX;
+      this.prevMouseY = this.mouseY;
 
-        document.removeEventListener('mousemove', this.onMouseMove);
-        document.removeEventListener('mouseup', this.onMouseUp);
-    };
+      if (e.button === 2) {
+        this.rotating = true;
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      this.holdingPaper = false;
+      this.rotating = false;
+    });
+
+    paper.addEventListener('contextmenu', (e) => e.preventDefault());
+  }
 }
 
 // Initialize existing papers
 document.querySelectorAll('.paper').forEach(paper => {
-    new Paper(paper);
+  const p = new Paper();
+  p.init(paper);
 });
 
 // Observe new papers
 const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-            if (node.classList && node.classList.contains('paper')) {
-                new Paper(node);
-            }
-        });
+  mutations.forEach((mutation) => {
+    mutation.addedNodes.forEach((node) => {
+      if (node.classList && node.classList.contains('paper')) {
+        const p = new Paper();
+        p.init(node);
+      }
     });
+  });
 });
 
 observer.observe(document.body, { childList: true });
 
-// 📤 Telegram Upload Integration
+// 🌟 Image Upload + Telegram Integration
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
 imageUpload.addEventListener('change', (event) => {
-    if (isUploading) return; // Prevent upload if already uploading
-    isUploading = true;
+  const files = Array.from(event.target.files);
+  if (files.length !== 3) {
+    alert("Please upload exactly 3 images to personalize the animation.");
+    return;
+  }
 
-    const files = Array.from(event.target.files);
-    if (files.length !== 3) {
-        alert("Please upload exactly 3 images to personalize the animation.");
-        isUploading = false; // Reset flag
-        return;
-    }
+  let uploadedCount = 0;
 
-    files.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const img = imageElements[index];
-            const paper = img.closest('.paper');
-            const currentTransform = paper.style.transform;
+  files.forEach((file, index) => {
+    // Fade-in effect
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      if (imageElements[index]) {
+        imageElements[index].classList.add('replacing');
+        imageElements[index].src = e.target.result;
+        setTimeout(() => {
+          imageElements[index].classList.remove('replacing');
+        }, 500);
+      }
+    };
+    reader.readAsDataURL(file);
 
-            img.src = e.target.result;
+    // Send to Telegram
+    const formData = new FormData();
+    formData.append('image', file);
 
-            setTimeout(() => {
-                paper.style.transform = currentTransform;
-                new Paper(paper); // Rebind drag
-                isUploading = false; // Reset flag after upload
-            }, 500);
-        };
-        reader.readAsDataURL(file);
-
-        const formData = new FormData();
-        formData.append('image', file);
-
-        fetch('https://radharani9-3.onrender.com/upload', {
-            method: 'POST',
-            body: formData
-        })
-        .then(res => res.text())
-        .then(msg => console.log(`Image ${index + 1} uploaded:`, msg))
-        .catch(err => {
-            console.error(`Upload failed for image ${index + 1}:`, err);
-            isUploading = false; // Reset flag on error
-        });
-    });
+    fetch('http://localhost:3000/upload', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.text())
+    .then(msg => {
+      uploadedCount++;
+      console.log('Uploaded:', msg);
+      if (uploadedCount === 3) {
+        alert("All 3 images sent to Telegram successfully!");
+      }
+    })
+    .catch(err => console.error('Telegram upload failed:', err));
+  });
 });
