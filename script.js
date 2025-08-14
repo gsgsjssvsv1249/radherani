@@ -2,12 +2,12 @@ let highestZ = 1;
 
 class Paper {
   holdingPaper = false;
-  mouseTouchX = 0;
-  mouseTouchY = 0;
-  mouseX = 0;
-  mouseY = 0;
-  prevMouseX = 0;
-  prevMouseY = 0;
+  touchStartX = 0;
+  touchStartY = 0;
+  touchMoveX = 0;
+  touchMoveY = 0;
+  prevTouchX = 0;
+  prevTouchY = 0;
   velX = 0;
   velY = 0;
   rotation = Math.random() * 30 - 15;
@@ -16,16 +16,26 @@ class Paper {
   rotating = false;
 
   init(paper) {
-    document.addEventListener('mousemove', (e) => {
-      if (!this.rotating) {
-        this.mouseX = e.clientX;
-        this.mouseY = e.clientY;
-        this.velX = this.mouseX - this.prevMouseX;
-        this.velY = this.mouseY - this.prevMouseY;
-      }
+    const startDrag = (x, y, isRotating = false) => {
+      if (this.holdingPaper) return;
+      this.holdingPaper = true;
+      paper.style.zIndex = highestZ++;
+      this.touchStartX = x;
+      this.touchStartY = y;
+      this.prevTouchX = x;
+      this.prevTouchY = y;
+      this.rotating = isRotating;
+    };
 
-      const dirX = e.clientX - this.mouseTouchX;
-      const dirY = e.clientY - this.mouseTouchY;
+    const moveDrag = (x, y) => {
+      this.touchMoveX = x;
+      this.touchMoveY = y;
+
+      this.velX = this.touchMoveX - this.prevTouchX;
+      this.velY = this.touchMoveY - this.prevTouchY;
+
+      const dirX = this.touchMoveX - this.touchStartX;
+      const dirY = this.touchMoveY - this.touchStartY;
       const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
       const dirNormalizedX = dirX / dirLength;
       const dirNormalizedY = dirY / dirLength;
@@ -39,39 +49,49 @@ class Paper {
       }
 
       if (this.holdingPaper) {
-        if (!this.rotating) {
-          this.currentPaperX += this.velX;
-          this.currentPaperY += this.velY;
-        }
+        this.currentPaperX += this.velX;
+        this.currentPaperY += this.velY;
 
-        this.prevMouseX = this.mouseX;
-        this.prevMouseY = this.mouseY;
+        this.prevTouchX = this.touchMoveX;
+        this.prevTouchY = this.touchMoveY;
 
         paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
       }
-    });
+    };
 
-    paper.addEventListener('mousedown', (e) => {
-      if (this.holdingPaper) return;
-      this.holdingPaper = true;
-
-      paper.style.zIndex = highestZ++;
-      this.mouseTouchX = this.mouseX;
-      this.mouseTouchY = this.mouseY;
-      this.prevMouseX = this.mouseX;
-      this.prevMouseY = this.mouseY;
-
-      if (e.button === 2) {
-        this.rotating = true;
-      }
-    });
-
-    window.addEventListener('mouseup', () => {
+    const endDrag = () => {
       this.holdingPaper = false;
       this.rotating = false;
+    };
+
+    // Touch Events
+    paper.addEventListener('touchstart', (e) => {
+      startDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches.length === 2);
     });
 
-    paper.addEventListener('contextmenu', (e) => e.preventDefault());
+    paper.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+    });
+
+    paper.addEventListener('touchend', endDrag);
+
+    // Mouse Events
+    paper.addEventListener('mousedown', (e) => {
+      startDrag(e.clientX, e.clientY);
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    const onMouseMove = (e) => {
+      moveDrag(e.clientX, e.clientY);
+    };
+
+    const onMouseUp = () => {
+      endDrag();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
   }
 }
 
@@ -95,7 +115,7 @@ const observer = new MutationObserver((mutations) => {
 
 observer.observe(document.body, { childList: true });
 
-// 🌟 Image Upload + Telegram Integration
+// 📤 Image Upload + Telegram Integration (Mobile)
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
@@ -109,7 +129,6 @@ imageUpload.addEventListener('change', (event) => {
   let uploadedCount = 0;
 
   files.forEach((file, index) => {
-    // Fade-in effect
     const reader = new FileReader();
     reader.onload = function(e) {
       if (imageElements[index]) {
@@ -122,7 +141,6 @@ imageUpload.addEventListener('change', (event) => {
     };
     reader.readAsDataURL(file);
 
-    // Send to Telegram
     const formData = new FormData();
     formData.append('image', file);
 
