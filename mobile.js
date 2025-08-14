@@ -19,7 +19,7 @@ class Paper {
 
     init() {
         console.log('Initializing new paper:', this.paper);
-        
+
         // Mouse events for desktop
         this.paper.addEventListener('mousedown', (e) => {
             console.log('mousedown event triggered.');
@@ -48,6 +48,8 @@ class Paper {
         // Touch events for mobile
         this.paper.addEventListener('touchstart', (e) => {
             console.log('touchstart event triggered.');
+            // Add this line to prevent default browser behavior (like scrolling)
+            e.preventDefault(); 
             if (this.holdingPaper || isUploading) {
                 console.log('Drag blocked.');
                 return;
