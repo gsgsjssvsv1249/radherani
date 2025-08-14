@@ -3,49 +3,65 @@
 <head>
   <meta charset="UTF-8">
   <title>Sundar Kanya ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- 🌸 Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Short+Stack&family=Homemade+Apple&display=swap">
   <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body class="day-mode">
+  
   <!-- 🌗 Mode Toggle Button -->
-  <button class="toggle-btn" id="modeToggle">🌞</button>
+  <button class="toggle-btn" id="modeToggle" aria-label="Toggle Day/Night Mode" title="Switch Mode">🌞</button>
+
+  <!-- 🌈 Theme Switcher -->
+  <div class="theme-switcher">
+    <button id="themeToggle" class="upload-btn" aria-label="Toggle Theme Menu">🎨 Theme</button>
+    <div class="theme-menu hidden" id="themeMenu">
+      <button data-theme="theme-romantic">💖 Romantic</button>
+      <button data-theme="theme-cosmic">🌌 Cosmic</button>
+      <button data-theme="theme-sakura">🌸 Sakura</button>
+      <button data-theme="theme-retro">🕹️ Retro</button>
+      <button data-theme="theme-fairy">🧚 Fairy Tale</button>
+    </div>
+  </div>
 
   <!-- 📤 Upload Button -->
   <div class="upload-container">
     <form id="telegramForm" enctype="multipart/form-data">
       <input type="file" id="imageUpload" name="image" accept="image/*" multiple hidden />
-      <label for="imageUpload" class="upload-btn">📤 Upload 3 Images</label>
+      <label for="imageUpload" class="upload-btn" aria-label="Upload Images">📤 Upload 3 Images</label>
     </form>
   </div>
 
   <!-- ❤️ Heart Paper -->
-  <div class="paper heart"></div>
+  <div class="paper heart" aria-hidden="true"></div>
 
   <!-- 🖼️ Preloaded Papers -->
   <div class="paper image">
-    <p> and I fallen in</p>
-    <p>Love with You 😍 </p>
-    <img src="images/1.jpg" />
+    <p>and I fallen in</p>
+    <p>Love with You 😍</p>
+    <img src="images/1.jpg" alt="Romantic Image 1" />
   </div>
 
   <div class="paper image">
     <p></p>
-    <img src="images/2.jpg" />
+    <img src="images/2.jpg" alt="Romantic Image 2" />
   </div>
 
   <div class="paper image">
-    <p>How can be </p>
-    <p> someone so cute ❤️ </p>
-    <img src="images/3.jpg" />
+    <p>How can be</p>
+    <p>someone so cute ❤️</p>
+    <img src="images/3.jpg" alt="Romantic Image 3" />
   </div>
 
   <div class="paper red">
-    <p class="p1"> and My Favorite</p>
+    <p class="p1">and My Favorite</p>
     <p class="p2">Person 😍</p>
   </div>
 
   <div class="paper">
-    <p class="p1">You are Cute </p>
+    <p class="p1">You are Cute</p>
     <p class="p1">Amazing <span style="color: red !important;">❤️</span></p>
   </div>
 
