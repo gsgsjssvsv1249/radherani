@@ -139,8 +139,20 @@ imageUpload.addEventListener('change', (event) => {
     }
     
     isUploading = true;
-    let completedUploads = 0;
 
+    // Create an array of promises for the fetch requests
+    const uploadPromises = files.map(file => {
+        const formData = new FormData();
+        formData.append('image', file);
+        
+        // Return the fetch promise for each file
+        return fetch('https://radharani9-3.onrender.com/upload', {
+            method: 'POST',
+            body: formData
+        });
+    });
+
+    // Handle file reading and display for all files concurrently
     files.forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -155,24 +167,25 @@ imageUpload.addEventListener('change', (event) => {
             }, 500);
         };
         reader.readAsDataURL(file);
+    });
 
-        const formData = new FormData();
-        formData.append('image', file);
-
-        fetch('https://radharani9-3.onrender.com/upload', {
-            method: 'POST',
-            body: formData
+    // Wait for all upload promises to resolve before resetting the flag
+    Promise.all(uploadPromises)
+        .then(responses => {
+            responses.forEach((res, index) => {
+                if (res.ok) {
+                    res.text().then(msg => console.log(`Image ${index + 1} uploaded:`, msg));
+                } else {
+                    console.error(`Upload failed for image ${index + 1}:`, res.statusText);
+                }
+            });
         })
-        .then(res => res.text())
-        .then(msg => console.log(`Image ${index + 1} uploaded:`, msg))
         .catch(err => {
-            console.error(`Upload failed for image ${index + 1}:`, err);
+            console.error('One or more uploads failed:', err);
         })
         .finally(() => {
-            completedUploads++;
-            if (completedUploads === files.length) {
-                isUploading = false;
-            }
+            // This is the key change: The flag is guaranteed to be reset
+            // after ALL fetch requests have completed, regardless of success.
+            isUploading = false;
         });
-    });
 });
