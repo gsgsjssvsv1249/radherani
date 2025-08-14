@@ -92,13 +92,13 @@ class Paper {
   }
 }
 
-// 🧾 Initialize papers
+// Initialize papers
 document.querySelectorAll('.paper').forEach(paper => {
   const p = new Paper();
   p.init(paper);
 });
 
-// 🌗 Mode Toggle
+// Mode Toggle
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
 
@@ -117,7 +117,7 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// 📤 Image Upload + Telegram
+// Image Upload + Telegram
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
@@ -157,31 +157,6 @@ imageUpload.addEventListener('change', async (event) => {
       console.error(`Upload failed for image ${i + 1}:`, err);
     }
   }
-});
 
-// 🎨 Theme Switcher Logic
-const themeToggle = document.getElementById('themeToggle');
-const themeMenu = document.getElementById('themeMenu');
-const themeButtons = themeMenu.querySelectorAll('button');
-
-themeToggle.addEventListener('click', () => {
-  themeMenu.classList.toggle('hidden');
-});
-
-themeButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const selectedTheme = btn.getAttribute('data-theme');
-
-    // Remove all theme classes
-    body.classList.remove('theme-romantic', 'theme-cosmic', 'theme-sakura', 'theme-retro', 'theme-fairy');
-
-    // Also remove day/night mode to avoid conflict
-    body.classList.remove('day-mode', 'night-mode');
-
-    // Apply selected theme
-    body.classList.add(selectedTheme);
-
-    // Optional: Hide menu after selection
-    themeMenu.classList.add('hidden');
-  });
+  // ✅ Final alert removed
 });
