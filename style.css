@@ -17,6 +17,68 @@ body.night-mode {
   transition: background 0.5s ease, color 0.5s ease;
 }
 
+/* 🌈 THEME VARIANTS */
+body.theme-romantic {
+  background: linear-gradient(to bottom right, #ffe4e1, #ffc0cb);
+  color: maroon;
+  font-family: 'Zeyada', cursive;
+}
+
+body.theme-cosmic {
+  background-image: url("images/stars.jpg");
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+}
+
+body.theme-sakura {
+  background-image: url("images/sakura.jpg");
+  background-size: cover;
+  background-position: center;
+  color: #333;
+}
+
+body.theme-retro {
+  background-color: #000;
+  color: #fff;
+  filter: grayscale(100%);
+}
+
+body.theme-fairy {
+  background: linear-gradient(to bottom, #a0e0c0, #f0c0f0);
+  color: #2e2e2e;
+}
+
+/* 🌈 Theme Switcher Styles */
+.theme-switcher {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 9999;
+}
+
+.theme-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.theme-menu.hidden {
+  display: none;
+}
+
+.theme-menu button {
+  background: #ff4081;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Short Stack', cursive;
+}
+
+/* 📝 Paper Styling */
 body {
   height: 100vh;
   display: flex;
@@ -25,7 +87,6 @@ body {
   transition: background 0.5s ease, color 0.5s ease;
 }
 
-/* 📝 Paper Styling */
 .paper {
   padding: 20px 100px;
   transform: rotateZ(-5deg);
@@ -33,20 +94,20 @@ body {
   position: absolute;
   transition: background 0.5s ease, box-shadow 0.5s ease;
   animation: fadeIn 0.6s ease;
-  
-  /* CRITICAL FIX FOR DRAGGING ON TOUCH DEVICES */
-  /* This prevents the browser from scrolling the page when you touch the paper, */
-  /* letting your JavaScript handle the drag event. */
   touch-action: none;
+  user-select: none;
+  cursor: grab;
 }
 
-/* 🌞 Day Paper Variant */
+.paper:active {
+  cursor: grabbing;
+}
+
 body.day-mode .paper {
   background-image: url("images/paper.webp");
   background-size: cover;
 }
 
-/* 🌙 Night Paper Variant */
 body.night-mode .paper {
   background-image: url("images/paper1.webp");
   background-size: cover;
@@ -64,7 +125,6 @@ body.night-mode .paper {
   border-radius: 50%;
 }
 
-/* 🖼️ Image Paper */
 .paper.image {
   padding: 10px;
 }
@@ -73,14 +133,12 @@ body.night-mode .paper {
   font-size: 30px;
 }
 
-/* 📷 Images */
 img {
   max-height: 200px;
   width: 100%;
   user-select: none;
 }
 
-/* ❤️ Heart Icon Overlay */
 .paper.heart::after {
   content: "";
   background-image: url('https://cdn.pixabay.com/photo/2016/03/31/19/25/cartoon-1294994__340.png');
@@ -104,7 +162,6 @@ p {
   user-select: none;
 }
 
-/* 🌙 Night Text Variant */
 body.night-mode p {
   color: #f5f5f5;
   opacity: 1;
@@ -131,13 +188,11 @@ body.night-mode p {
   transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
-/* 🌙 Night Mode Styles for Button */
 body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
 }
 
-/* 🌀 Button Press Animation */
 .toggle-btn:active {
   transform: scale(0.95);
 }
@@ -150,7 +205,6 @@ body.night-mode .toggle-btn {
   z-index: 10000;
 }
 
-/* 📤 Upload Button Styling */
 .upload-btn {
   background: #ff4081;
   color: white;
@@ -165,13 +219,11 @@ body.night-mode .toggle-btn {
   text-align: center;
 }
 
-/* 🌙 Night Mode Upload Button */
 body.night-mode .upload-btn {
   background: #444;
   color: #ff4081;
 }
 
-/* 🌀 Upload Button Press Animation */
 .upload-btn:active {
   transform: scale(0.95);
 }
