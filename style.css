@@ -33,6 +33,11 @@ body {
   position: absolute;
   transition: background 0.5s ease, box-shadow 0.5s ease;
   animation: fadeIn 0.6s ease;
+  
+  /* CRITICAL FIX FOR DRAGGING ON TOUCH DEVICES */
+  /* This prevents the browser from scrolling the page when you touch the paper, */
+  /* letting your JavaScript handle the drag event. */
+  touch-action: none;
 }
 
 /* 🌞 Day Paper Variant */
