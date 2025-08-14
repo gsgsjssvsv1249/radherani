@@ -54,66 +54,6 @@
   </div>
 
   <!-- 🌟 Script Section -->
-  <script>
-    const toggleBtn = document.getElementById('modeToggle');
-    const body = document.body;
-
-    // 🌞 Initial Mode
-    body.classList.add('day-mode');
-    toggleBtn.textContent = '🌞';
-
-    toggleBtn.addEventListener('click', () => {
-      if (body.classList.contains('day-mode')) {
-        body.classList.remove('day-mode');
-        body.classList.add('night-mode');
-        toggleBtn.textContent = '🌙';
-      } else {
-        body.classList.remove('night-mode');
-        body.classList.add('day-mode');
-        toggleBtn.textContent = '🌞';
-      }
-    });
-
-    // 📤 Handle Image Upload (Replace 3 existing images + Send to Telegram)
-    const imageUpload = document.getElementById('imageUpload');
-    const imageElements = document.querySelectorAll('.paper.image img');
-
-    imageUpload.addEventListener('change', (event) => {
-      const files = Array.from(event.target.files);
-      if (files.length !== 3) {
-        alert("Please upload exactly 3 images to personalize the animation.");
-        return;
-      }
-
-      // Replace images in animation
-      files.forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          if (imageElements[index]) {
-            imageElements[index].src = e.target.result;
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-
-      // Send first image to Telegram
-      const formData = new FormData();
-      formData.append('image', files[0]); // You can loop and send all if needed
-
-      fetch('http://localhost:3000/upload', {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.text())
-      .then(msg => console.log(msg))
-      .catch(err => console.error('Telegram upload failed:', err));
-    });
-
-    // 📱 Device Detection
-    const ua = navigator.userAgent;
-    const script = document.createElement('script');
-    script.src = /Mobi|Android/i.test(ua) ? './mobile.js' : './script.js';
-    document.body.appendChild(script);
-  </script>
+  <script src="./main.js"></script>
 </body>
 </html>
