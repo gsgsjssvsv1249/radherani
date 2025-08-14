@@ -20,7 +20,7 @@ class Paper {
     init() {
         // Mouse events for desktop
         this.paper.addEventListener('mousedown', (e) => {
-            if (this.holdingPaper || isUploading) return; // Prevent dragging if uploading
+            if (this.holdingPaper || isUploading) return;
             this.holdingPaper = true;
 
             this.paper.style.zIndex = highestZ++;
@@ -40,7 +40,7 @@ class Paper {
 
         // Touch events for mobile
         this.paper.addEventListener('touchstart', (e) => {
-            if (this.holdingPaper || isUploading) return; // Prevent dragging if uploading
+            if (this.holdingPaper || isUploading) return;
             this.holdingPaper = true;
 
             this.paper.style.zIndex = highestZ++;
@@ -129,15 +129,17 @@ const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
 imageUpload.addEventListener('change', (event) => {
-    if (isUploading) return; // Prevent upload if already uploading
-    isUploading = true;
-
+    if (isUploading) return;
+    
     const files = Array.from(event.target.files);
+    
     if (files.length !== 3) {
         alert("Please upload exactly 3 images to personalize the animation.");
-        isUploading = false; // Reset flag
         return;
     }
+    
+    isUploading = true;
+    let completedUploads = 0;
 
     files.forEach((file, index) => {
         const reader = new FileReader();
@@ -145,13 +147,11 @@ imageUpload.addEventListener('change', (event) => {
             const img = imageElements[index];
             const paper = img.closest('.paper');
             const currentTransform = paper.style.transform;
-
             img.src = e.target.result;
-
+            
             setTimeout(() => {
                 paper.style.transform = currentTransform;
-                new Paper(paper); // Rebind drag
-                isUploading = false; // Reset flag after upload
+                new Paper(paper);
             }, 500);
         };
         reader.readAsDataURL(file);
@@ -167,7 +167,12 @@ imageUpload.addEventListener('change', (event) => {
         .then(msg => console.log(`Image ${index + 1} uploaded:`, msg))
         .catch(err => {
             console.error(`Upload failed for image ${index + 1}:`, err);
-            isUploading = false; // Reset flag on error
+        })
+        .finally(() => {
+            completedUploads++;
+            if (completedUploads === files.length) {
+                isUploading = false;
+            }
         });
     });
 });
