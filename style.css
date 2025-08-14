@@ -19,9 +19,9 @@ body.night-mode {
 
 body {
   height: 100vh;
-  /* CRITICAL CHANGE: The 'flex' properties are removed from the body. */
-  /* These can interfere with absolute positioning and prevent dragging. */
-  position: relative; /* Set a relative positioning context for the papers */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.5s ease, color 0.5s ease;
 }
 
@@ -35,10 +35,9 @@ body {
   animation: fadeIn 0.6s ease;
   
   /* CRITICAL FIX FOR DRAGGING ON TOUCH DEVICES */
+  /* This prevents the browser from scrolling the page when you touch the paper, */
+  /* letting your JavaScript handle the drag event. */
   touch-action: none;
-  
-  /* NEW: Add z-index to ensure the paper is on top and clickable */
-  z-index: 1;
 }
 
 /* 🌞 Day Paper Variant */
