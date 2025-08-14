@@ -133,7 +133,11 @@ imageUpload.addEventListener('change', async (event) => {
     const reader = new FileReader();
     reader.onload = function(e) {
       if (imageElements[i]) {
+        imageElements[i].classList.add('replacing');
         imageElements[i].src = e.target.result;
+        setTimeout(() => {
+          imageElements[i].classList.remove('replacing');
+        }, 500);
       }
     };
     reader.readAsDataURL(file);
@@ -154,5 +158,5 @@ imageUpload.addEventListener('change', async (event) => {
     }
   }
 
-  alert("All 3 images sent to Telegram successfully!");
+  // ✅ Final alert removed
 });
