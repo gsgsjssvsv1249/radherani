@@ -1,4 +1,7 @@
-let highestZ = 1;
+let highestZ = Math.max(
+  1,
+  ...Array.from(document.querySelectorAll('.paper')).map(p => parseInt(getComputedStyle(p).zIndex) || 1)
+);
 
 class Paper {
   holdingPaper = false;
@@ -16,17 +19,16 @@ class Paper {
   rotating = false;
 
   init(paper) {
-    // Center each paper at start
-    paper.style.left = "50%";
-    paper.style.top = "50%";
-    paper.style.transform = `translate(-50%, -50%) rotateZ(${this.rotation}deg)`;
-
     const startDrag = (x, y, isRotating = false) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
 
-      // Always bring clicked paper to top
-      paper.style.zIndex = highestZ++;
+      // Always keep heart paper at top
+      if (!paper.classList.contains('heart')) {
+        paper.style.zIndex = highestZ++;
+      } else {
+        paper.style.zIndex = 9999;
+      }
 
       this.touchStartX = x;
       this.touchStartY = y;
@@ -42,6 +44,20 @@ class Paper {
       this.velX = this.touchMoveX - this.prevTouchX;
       this.velY = this.touchMoveY - this.prevTouchY;
 
+      const dirX = this.touchMoveX - this.touchStartX;
+      const dirY = this.touchMoveY - this.touchStartY;
+      const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
+      const dirNormalizedX = dirX / dirLength;
+      const dirNormalizedY = dirY / dirLength;
+
+      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+      let degrees = 180 * angle / Math.PI;
+      degrees = (360 + Math.round(degrees)) % 360;
+
+      if (this.rotating) {
+        this.rotation = degrees;
+      }
+
       if (this.holdingPaper) {
         this.currentPaperX += this.velX;
         this.currentPaperY += this.velY;
@@ -49,7 +65,7 @@ class Paper {
         this.prevTouchX = this.touchMoveX;
         this.prevTouchY = this.touchMoveY;
 
-        paper.style.transform = `translate(calc(-50% + ${this.currentPaperX}px), calc(-50% + ${this.currentPaperY}px)) rotateZ(${this.rotation}deg)`;
+        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
       }
     };
 
@@ -92,6 +108,21 @@ document.querySelectorAll('.paper').forEach(paper => {
   p.init(paper);
 });
 
+// Center the stack visually
+document.querySelectorAll('.paper').forEach((paper, index) => {
+  const offset = index * 4; // small offset for stacking look
+  paper.style.position = 'absolute';
+  paper.style.top = `calc(50% + ${offset}px)`;
+  paper.style.left = `calc(50% + ${offset}px)`;
+  paper.style.transform = `translate(-50%, -50%) rotate(${index % 2 === 0 ? -2 : 2}deg)`;
+});
+
+// Ensure heart paper is always last in stack
+const heartPaper = document.querySelector('.paper.heart');
+if (heartPaper) {
+  heartPaper.style.zIndex = 9999;
+}
+
 // Mode Toggle
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
@@ -111,7 +142,7 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// Image Upload + Telegram Integration (kept exactly as before)
+// Image Upload + Telegram
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
