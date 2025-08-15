@@ -23,27 +23,26 @@ body {
   align-items: center;
   justify-content: center;
   transition: background 0.5s ease, color 0.5s ease;
+  overflow: hidden;
+  position: relative;
 }
 
 /* 📝 Paper Styling */
 .paper {
-  position: absolute;
   padding: 20px 100px;
-  transform: rotateZ(-2deg);
+  transform: rotateZ(-5deg);
   box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
+  position: absolute;
   transition: background 0.5s ease, box-shadow 0.5s ease;
   animation: fadeIn 0.6s ease;
   touch-action: none;
   user-select: none;
   cursor: grab;
-  z-index: 1;
+  z-index: 5;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateZ(-5deg);
 }
-
-/* Stack neatly with small offsets */
-.paper:nth-child(1) { top: 120px; left: 100px; z-index: 4; }
-.paper:nth-child(2) { top: 130px; left: 110px; z-index: 3; }
-.paper:nth-child(3) { top: 140px; left: 120px; z-index: 2; }
-.paper:nth-child(4) { top: 150px; left: 130px; z-index: 1; }
 
 /* 🌞 Day Paper Variant */
 body.day-mode .paper {
@@ -62,6 +61,7 @@ body.night-mode .paper {
 
 /* ❤️ Heart Paper */
 .paper.heart {
+  position: relative;
   width: 200px;
   height: 200px;
   padding: 0;
@@ -82,7 +82,6 @@ img {
   max-height: 200px;
   width: 100%;
   user-select: none;
-  pointer-events: none;
 }
 
 /* ❤️ Heart Icon Overlay */
@@ -109,6 +108,7 @@ p {
   user-select: none;
 }
 
+/* 🌙 Night Text Variant */
 body.night-mode p {
   color: #f5f5f5;
   opacity: 1;
@@ -135,11 +135,13 @@ body.night-mode p {
   transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
+/* 🌙 Night Mode Styles for Button */
 body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
 }
 
+/* 🌀 Button Press Animation */
 .toggle-btn:active {
   transform: scale(0.95);
 }
@@ -152,6 +154,7 @@ body.night-mode .toggle-btn {
   z-index: 10000;
 }
 
+/* 📤 Upload Button Styling */
 .upload-btn {
   background: #ff4081;
   color: white;
@@ -166,17 +169,25 @@ body.night-mode .toggle-btn {
   text-align: center;
 }
 
+/* 🌙 Night Mode Upload Button */
 body.night-mode .upload-btn {
   background: #444;
   color: #ff4081;
 }
 
+/* 🌀 Upload Button Press Animation */
 .upload-btn:active {
   transform: scale(0.95);
 }
 
-/* ✨ Fade-in Animation */
+/* ✨ Fade-in Animation for Papers */
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
