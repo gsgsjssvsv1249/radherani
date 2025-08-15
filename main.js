@@ -47,53 +47,22 @@ document.querySelectorAll('.paper').forEach(paper => {
 // 🌗 Mode Toggle + Background Animation
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
-const backgroundContainer = document.createElement('div');
-backgroundContainer.className = 'background-container';
-document.body.appendChild(backgroundContainer);
 
-function clearBackground() {
-  backgroundContainer.innerHTML = '';
-}
 
-function createPetals() {
-  clearBackground();
-  for (let i = 0; i < 30; i++) {
-    const petal = document.createElement('div');
-    petal.className = 'petal';
-    petal.style.left = `${Math.random() * 100}vw`;
-    petal.style.animationDuration = `${5 + Math.random() * 5}s`;
-    backgroundContainer.appendChild(petal);
-  }
-}
 
-function createSparkles() {
-  clearBackground();
-  for (let i = 0; i < 40; i++) {
-    const sparkle = document.createElement('div');
-    sparkle.className = 'sparkle';
-    sparkle.style.left = `${Math.random() * 100}vw`;
-    sparkle.style.top = `${Math.random() * 100}vh`;
-    sparkle.style.animationDuration = `${6 + Math.random() * 4}s`;
-    backgroundContainer.appendChild(sparkle);
-  }
-}
 
 // 🌞 Initial Mode
 body.classList.add('day-mode');
 toggleBtn.textContent = '🌞';
-createPetals();
-
 toggleBtn.addEventListener('click', () => {
   if (body.classList.contains('day-mode')) {
     body.classList.remove('day-mode');
     body.classList.add('night-mode');
     toggleBtn.textContent = '🌙';
-    createSparkles();
   } else {
     body.classList.remove('night-mode');
     body.classList.add('day-mode');
     toggleBtn.textContent = '🌞';
-    createPetals();
   }
 });
 
