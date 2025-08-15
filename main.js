@@ -19,14 +19,17 @@ class Paper {
     // Center each paper at start
     paper.style.left = "50%";
     paper.style.top = "50%";
+    paper.style.position = "absolute";
+    paper.style.zIndex = highestZ++;
     paper.style.transform = `translate(-50%, -50%) rotateZ(${this.rotation}deg)`;
 
     const startDrag = (x, y, isRotating = false) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
 
-      // Always bring clicked paper to top
+      // Bring clicked paper to top
       paper.style.zIndex = highestZ++;
+      paper.classList.add('selected');
 
       this.touchStartX = x;
       this.touchStartY = y;
@@ -56,6 +59,7 @@ class Paper {
     const endDrag = () => {
       this.holdingPaper = false;
       this.rotating = false;
+      paper.classList.remove('selected');
     };
 
     // Touch Events
@@ -111,7 +115,7 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// Image Upload + Telegram Integration (kept exactly as before)
+// Image Upload + Telegram Integration
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
