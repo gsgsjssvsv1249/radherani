@@ -1,70 +1,83 @@
-let highestZ = 5; // Start higher than any paper's initial z-index
+let highestZ = 1;
 
 class Paper {
   holdingPaper = false;
   touchStartX = 0;
   touchStartY = 0;
+  touchMoveX = 0;
+  touchMoveY = 0;
   prevTouchX = 0;
   prevTouchY = 0;
   velX = 0;
   velY = 0;
-  rotation = 0;
+  rotation = Math.random() * 30 - 15;
   currentPaperX = 0;
   currentPaperY = 0;
+  rotating = false;
 
   init(paper) {
-    const startDrag = (x, y) => {
+    // Center each paper at start
+    paper.style.left = "50%";
+    paper.style.top = "50%";
+    paper.style.transform = `translate(-50%, -50%) rotateZ(${this.rotation}deg)`;
+
+    const startDrag = (x, y, isRotating = false) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
-      paper.style.zIndex = highestZ++; // Bring to top
+
+      // Always bring clicked paper to top
+      paper.style.zIndex = highestZ++;
+
       this.touchStartX = x;
       this.touchStartY = y;
       this.prevTouchX = x;
       this.prevTouchY = y;
-
-      // Store current transform values
-      const rect = paper.getBoundingClientRect();
-      this.currentPaperX = rect.left;
-      this.currentPaperY = rect.top;
+      this.rotating = isRotating;
     };
 
     const moveDrag = (x, y) => {
-      if (!this.holdingPaper) return;
-      this.velX = x - this.prevTouchX;
-      this.velY = y - this.prevTouchY;
+      this.touchMoveX = x;
+      this.touchMoveY = y;
 
-      this.currentPaperX += this.velX;
-      this.currentPaperY += this.velY;
+      this.velX = this.touchMoveX - this.prevTouchX;
+      this.velY = this.touchMoveY - this.prevTouchY;
 
-      this.prevTouchX = x;
-      this.prevTouchY = y;
+      if (this.holdingPaper) {
+        this.currentPaperX += this.velX;
+        this.currentPaperY += this.velY;
 
-      paper.style.left = this.currentPaperX + "px";
-      paper.style.top = this.currentPaperY + "px";
+        this.prevTouchX = this.touchMoveX;
+        this.prevTouchY = this.touchMoveY;
+
+        paper.style.transform = `translate(calc(-50% + ${this.currentPaperX}px), calc(-50% + ${this.currentPaperY}px)) rotateZ(${this.rotation}deg)`;
+      }
     };
 
     const endDrag = () => {
       this.holdingPaper = false;
+      this.rotating = false;
     };
 
-    // Touch
-    paper.addEventListener('touchstart', e => {
-      startDrag(e.touches[0].clientX, e.touches[0].clientY);
+    // Touch Events
+    paper.addEventListener('touchstart', (e) => {
+      startDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches.length === 2);
     });
-    paper.addEventListener('touchmove', e => {
+
+    paper.addEventListener('touchmove', (e) => {
       e.preventDefault();
       moveDrag(e.touches[0].clientX, e.touches[0].clientY);
     });
+
     paper.addEventListener('touchend', endDrag);
 
-    // Mouse
-    paper.addEventListener('mousedown', e => {
+    // Mouse Events
+    paper.addEventListener('mousedown', (e) => {
       startDrag(e.clientX, e.clientY);
       document.addEventListener('mousemove', onMouseMove);
       document.addEventListener('mouseup', onMouseUp);
     });
 
-    const onMouseMove = e => moveDrag(e.clientX, e.clientY);
+    const onMouseMove = (e) => moveDrag(e.clientX, e.clientY);
     const onMouseUp = () => {
       endDrag();
       document.removeEventListener('mousemove', onMouseMove);
@@ -73,15 +86,16 @@ class Paper {
   }
 }
 
-// Init papers
+// Initialize papers
 document.querySelectorAll('.paper').forEach(paper => {
   const p = new Paper();
   p.init(paper);
 });
 
-// Toggle mode
+// Mode Toggle
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
+
 body.classList.add('day-mode');
 toggleBtn.textContent = '🌞';
 
@@ -97,24 +111,44 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// Image upload
+// Image Upload + Telegram Integration (kept exactly as before)
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
-imageUpload.addEventListener('change', async event => {
+imageUpload.addEventListener('change', async (event) => {
   const files = Array.from(event.target.files);
   if (files.length !== 3) {
-    alert("Please upload exactly 3 images.");
+    alert("Please upload exactly 3 images to personalize the animation.");
     return;
   }
+
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = function(e) {
       if (imageElements[i]) {
+        imageElements[i].classList.add('replacing');
         imageElements[i].src = e.target.result;
+        setTimeout(() => {
+          imageElements[i].classList.remove('replacing');
+        }, 500);
       }
     };
     reader.readAsDataURL(file);
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const res = await fetch('http://localhost:3000/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const msg = await res.text();
+      console.log(`Image ${i + 1} uploaded:`, msg);
+    } catch (err) {
+      console.error(`Upload failed for image ${i + 1}:`, err);
+    }
   }
 });
