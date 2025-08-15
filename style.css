@@ -226,4 +226,14 @@ body.night-mode .upload-btn {
     opacity: 0.6;
   }
 }
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1; /* 👈 This ensures it's behind all content */
+}
 
