@@ -16,6 +16,9 @@ class Paper {
   rotating = false;
 
   init(paper) {
+    // Apply initial tilt
+    paper.style.setProperty('--rotate', `${this.rotation.toFixed(2)}deg`);
+
     const startDrag = (x, y, isRotating = false) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
@@ -157,6 +160,4 @@ imageUpload.addEventListener('change', async (event) => {
       console.error(`Upload failed for image ${i + 1}:`, err);
     }
   }
-
-  // ✅ Final alert removed
 });
