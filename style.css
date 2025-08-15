@@ -20,29 +20,30 @@ body.night-mode {
 body {
   height: 100vh;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   transition: background 0.5s ease, color 0.5s ease;
+  overflow: hidden;
 }
 
 /* 📝 Paper Styling */
 .paper {
   padding: 20px 100px;
   box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: transform 0.3s ease, background 0.5s ease, box-shadow 0.5s ease;
+  margin: 20px;
+  position: relative;
   animation: fadeIn 0.6s ease;
   cursor: grab;
-  transform: rotate(var(--rotate)); /* 🆕 Tilt effect */
-  transform-origin: center center;   /* 🆕 Natural rotation */
+  transform: rotate(var(--rotate));
+  transform-origin: center center;
+  transition: transform 0.3s ease, background 0.5s ease, box-shadow 0.5s ease;
   z-index: 1;
 }
 
 .paper:hover {
-  transform: rotate(var(--rotate)) scale(1.05); /* 🆕 Hover zoom with tilt */
-  z-index: 10; /* 🆕 Bring to front on hover */
+  transform: rotate(var(--rotate)) scale(1.05);
+  z-index: 10;
 }
 
 /* 🌞 Day Paper Variant */
