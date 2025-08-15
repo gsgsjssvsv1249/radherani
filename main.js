@@ -1,126 +1,130 @@
-let highestZ = 1;
+let highestZ = 2; // keep heart at z=1 initially
 let draggedPapers = new Set();
+const DRAG_THRESHOLD = 5; // min pixels before moving starts
 
 class Paper {
-  holdingPaper = false;
-  dragStarted = false;
-  touchStartX = 0;
-  touchStartY = 0;
-  touchMoveX = 0;
-  touchMoveY = 0;
-  prevTouchX = 0;
-  prevTouchY = 0;
-  velX = 0;
-  velY = 0;
-  rotation = Math.random() * 16 - 8; // bigger tilt range
-  currentPaperX = 0;
-  currentPaperY = 0;
+  constructor(paper) {
+    this.paper = paper;
+    this.holdingPaper = false;
+    this.dragStarted = false;
+    this.touchStartX = 0;
+    this.touchStartY = 0;
+    this.prevTouchX = 0;
+    this.prevTouchY = 0;
+    this.currentPaperX = 0;
+    this.currentPaperY = 0;
+    this.velX = 0;
+    this.velY = 0;
+    this.rotation = parseFloat(paper.dataset.rotation) || 0;
+    this.rotating = false;
+    this.init();
+  }
 
-  init(paper) {
-    const startHold = (x, y) => {
-      this.holdingPaper = true;
-      this.dragStarted = false; // reset drag flag
-      this.touchStartX = x;
-      this.touchStartY = y;
+  startDrag(x, y, isRotating = false) {
+    if (this.holdingPaper) return;
+
+    // Ensure we grab the paper actually under pointer
+    const topEl = document.elementFromPoint(x, y);
+    if (topEl && !this.paper.contains(topEl) && !topEl.contains(this.paper)) {
+      return; // Clicked on something else
+    }
+
+    this.holdingPaper = true;
+    this.dragStarted = false; // not moving until threshold reached
+    this.touchStartX = x;
+    this.touchStartY = y;
+    this.prevTouchX = x;
+    this.prevTouchY = y;
+    this.rotating = isRotating;
+
+    if (!this.paper.classList.contains("heart")) {
+      draggedPapers.add(this.paper);
+    }
+
+    // Reveal heart paper when all non-heart moved
+    const totalNonHeart = document.querySelectorAll(".paper:not(.heart)").length;
+    if (draggedPapers.size === totalNonHeart) {
+      const heart = document.querySelector(".paper.heart");
+      heart.style.zIndex = ++highestZ;
+    }
+  }
+
+  moveDrag(x, y) {
+    if (!this.holdingPaper) return;
+
+    const moveX = x - this.touchStartX;
+    const moveY = y - this.touchStartY;
+
+    // Only start drag after threshold
+    if (!this.dragStarted && Math.sqrt(moveX * moveX + moveY * moveY) > DRAG_THRESHOLD) {
+      this.dragStarted = true;
+      this.paper.style.zIndex = ++highestZ;
+    }
+
+    if (this.dragStarted) {
+      this.velX = x - this.prevTouchX;
+      this.velY = y - this.prevTouchY;
+
+      this.currentPaperX += this.velX;
+      this.currentPaperY += this.velY;
+
       this.prevTouchX = x;
       this.prevTouchY = y;
-    };
 
-    const startDrag = () => {
-      if (!this.dragStarted) {
-        // Mark this paper as moved (except heart)
-        if (!paper.classList.contains("heart")) {
-          draggedPapers.add(paper);
-          paper.style.zIndex = ++highestZ;
-        } else {
-          paper.style.zIndex = ++highestZ;
-        }
+      this.paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotate(${this.rotation}deg)`;
+    }
+  }
 
-        // Reveal heart paper only when all others moved
-        const totalNonHeart = document.querySelectorAll(".paper:not(.heart)").length;
-        if (draggedPapers.size === totalNonHeart) {
-          const heart = document.querySelector(".paper.heart");
-          heart.style.zIndex = ++highestZ;
-        }
+  endDrag() {
+    this.holdingPaper = false;
+    this.rotating = false;
+  }
 
-        this.dragStarted = true;
-      }
-    };
-
-    const moveHold = (x, y) => {
-      const dx = x - this.touchStartX;
-      const dy = y - this.touchStartY;
-
-      // Only start drag if moved enough (5px threshold)
-      if (!this.dragStarted && Math.sqrt(dx * dx + dy * dy) > 5) {
-        startDrag();
-      }
-
-      if (this.holdingPaper && this.dragStarted) {
-        this.velX = x - this.prevTouchX;
-        this.velY = y - this.prevTouchY;
-
-        this.currentPaperX += this.velX;
-        this.currentPaperY += this.velY;
-
-        this.prevTouchX = x;
-        this.prevTouchY = y;
-
-        paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotate(${this.rotation}deg)`;
-      }
-    };
-
-    const endHold = () => {
-      this.holdingPaper = false;
-      this.dragStarted = false;
-    };
-
-    // Touch events
-    paper.addEventListener("touchstart", (e) => {
-      startHold(e.touches[0].clientX, e.touches[0].clientY);
+  init() {
+    // Touch Events
+    this.paper.addEventListener("touchstart", e => {
+      this.startDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches.length === 2);
     });
-    paper.addEventListener("touchmove", (e) => {
+
+    this.paper.addEventListener("touchmove", e => {
       e.preventDefault();
-      moveHold(e.touches[0].clientX, e.touches[0].clientY);
+      this.moveDrag(e.touches[0].clientX, e.touches[0].clientY);
     });
-    paper.addEventListener("touchend", endHold);
 
-    // Mouse events
-    paper.addEventListener("mousedown", (e) => {
-      startHold(e.clientX, e.clientY);
+    this.paper.addEventListener("touchend", () => this.endDrag());
+
+    // Mouse Events
+    this.paper.addEventListener("mousedown", e => {
+      this.startDrag(e.clientX, e.clientY);
+      const onMouseMove = evt => this.moveDrag(evt.clientX, evt.clientY);
+      const onMouseUp = () => {
+        this.endDrag();
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      };
       document.addEventListener("mousemove", onMouseMove);
       document.addEventListener("mouseup", onMouseUp);
     });
-    const onMouseMove = (e) => moveHold(e.clientX, e.clientY);
-    const onMouseUp = () => {
-      endHold();
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseup", onMouseUp);
-    };
   }
 }
 
-// Initialize papers
-document.querySelectorAll(".paper").forEach((paper) => {
-  const p = new Paper();
-  p.init(paper);
+// Stack papers with subtle tilt
+document.querySelectorAll(".paper").forEach((paper, index) => {
+  const tilt = (Math.random() * 10) - 5; // -5° to +5°
+  paper.dataset.rotation = tilt;
+  paper.style.position = "absolute";
+  paper.style.top = "50%";
+  paper.style.left = "50%";
+  paper.style.transform = `translate(-50%, -50%) rotate(${tilt}deg)`;
 });
 
 // Put heart paper at bottom initially
 const heartPaper = document.querySelector(".paper.heart");
-if (heartPaper) {
-  heartPaper.style.zIndex = 1;
-}
+if (heartPaper) heartPaper.style.zIndex = 1;
 
-// Center stack with tilt + random small offset to prevent overlap
-document.querySelectorAll(".paper").forEach((paper, index) => {
-  const offsetX = (Math.random() * 30) - 15; // -15px to +15px
-  const offsetY = (Math.random() * 30) - 15;
-  const tilt = (Math.random() * 16) - 8; // -8° to +8°
-  paper.style.position = "absolute";
-  paper.style.top = `calc(50% + ${offsetY}px)`;
-  paper.style.left = `calc(50% + ${offsetX}px)`;
-  paper.style.transform = `translate(-50%, -50%) rotate(${tilt}deg)`;
+// Initialize drag for each paper
+document.querySelectorAll(".paper").forEach(paper => {
+  new Paper(paper);
 });
 
 // Mode Toggle
@@ -142,7 +146,7 @@ toggleBtn.addEventListener("click", () => {
   }
 });
 
-// Image Upload + Telegram Integration
+// Image Upload + Telegram
 const imageUpload = document.getElementById("imageUpload");
 const imageElements = document.querySelectorAll(".paper.image img");
 
@@ -156,7 +160,7 @@ imageUpload.addEventListener("change", async (event) => {
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = function(e) {
       if (imageElements[i]) {
         imageElements[i].classList.add("replacing");
         imageElements[i].src = e.target.result;
@@ -173,7 +177,7 @@ imageUpload.addEventListener("change", async (event) => {
 
       const res = await fetch("http://localhost:3000/upload", {
         method: "POST",
-        body: formData,
+        body: formData
       });
 
       const msg = await res.text();
