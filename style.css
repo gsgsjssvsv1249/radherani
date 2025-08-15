@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Zeyada&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Short+Stack&family=Homemade+Apple&display=swap');
 
 /* 🌞 DAY MODE */
 body.day-mode {
@@ -18,52 +17,51 @@ body.night-mode {
   transition: background 0.5s ease, color 0.5s ease;
 }
 
-/* 📝 Paper Styling */
 body {
   height: 100vh;
-  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.5s ease, color 0.5s ease;
-  overflow: hidden;
 }
 
+/* 📝 Paper Styling */
 .paper {
   padding: 20px 100px;
-  transform: rotateZ(-5deg);
-  box-shadow: 1px 15px 20px rgba(0,0,0,0.5);
+  box-shadow: 1px 15px 20px 0px rgba(0,0,0,0.5);
   position: absolute;
+  top: 0;
+  left: 0;
   transition: background 0.5s ease, box-shadow 0.5s ease;
   animation: fadeIn 0.6s ease;
-  touch-action: none;
-  user-select: none;
   cursor: grab;
-  z-index: 5;
 }
 
-.paper:active {
-  cursor: grabbing;
-}
-
+/* 🌞 Day Paper Variant */
 body.day-mode .paper {
   background-image: url("images/paper.webp");
   background-size: cover;
 }
 
+/* 🌙 Night Paper Variant */
 body.night-mode .paper {
   background-image: url("images/paper1.webp");
   background-size: cover;
   background-color: rgba(30, 30, 30, 0.8);
-  box-shadow: 1px 15px 20px rgba(255,255,255,0.1);
+  box-shadow: 1px 15px 20px 0px rgba(255,255,255,0.1);
   color: #f5f5f5;
 }
 
 /* ❤️ Heart Paper */
 .paper.heart {
+  position: relative;
   width: 200px;
   height: 200px;
   padding: 0;
   border-radius: 50%;
 }
 
+/* 🖼️ Image Paper */
 .paper.image {
   padding: 10px;
 }
@@ -72,13 +70,14 @@ body.night-mode .paper {
   font-size: 30px;
 }
 
+/* 📷 Images */
 img {
   max-height: 200px;
   width: 100%;
   user-select: none;
 }
 
-/* Heart Icon Overlay */
+/* ❤️ Heart Icon Overlay */
 .paper.heart::after {
   content: "";
   background-image: url('https://cdn.pixabay.com/photo/2016/03/31/19/25/cartoon-1294994__340.png');
@@ -88,21 +87,21 @@ img {
   top: 0;
   left: 0;
   background-size: 150px;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
   opacity: 0.6;
 }
 
 /* ✍️ Text Styling */
 p {
-  font-family: 'Zeyada', cursive;
+  font-family: 'Zeyada';
   font-size: 50px;
   color: rgb(0,0,100);
   opacity: 0.75;
   user-select: none;
-  margin: 0;
 }
 
+/* 🌙 Night Text Variant */
 body.night-mode p {
   color: #f5f5f5;
   opacity: 1;
@@ -129,11 +128,13 @@ body.night-mode p {
   transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
+/* 🌙 Night Mode Styles for Button */
 body.night-mode .toggle-btn {
   background: #333;
   color: #ff4081;
 }
 
+/* 🌀 Button Press Animation */
 .toggle-btn:active {
   transform: scale(0.95);
 }
@@ -143,9 +144,10 @@ body.night-mode .toggle-btn {
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 9999;
+  z-index: 10000;
 }
 
+/* 📤 Upload Button Styling */
 .upload-btn {
   background: #ff4081;
   color: white;
@@ -160,11 +162,13 @@ body.night-mode .toggle-btn {
   text-align: center;
 }
 
+/* 🌙 Night Mode Upload Button */
 body.night-mode .upload-btn {
   background: #444;
   color: #ff4081;
 }
 
+/* 🌀 Upload Button Press Animation */
 .upload-btn:active {
   transform: scale(0.95);
 }
