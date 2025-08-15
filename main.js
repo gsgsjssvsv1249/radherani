@@ -1,17 +1,50 @@
 let highestZ = 1;
 
+// 📝 Paper Class for Dragging
 class Paper {
-  // ... [Your existing Paper class remains unchanged]
-  // No edits needed here
+  constructor() {
+    this.paper = null;
+    this.offsetX = 0;
+    this.offsetY = 0;
+    this.isDragging = false;
+  }
+
+  init(paperElement) {
+    this.paper = paperElement;
+
+    this.paper.addEventListener('mousedown', (e) => this.startDrag(e));
+    document.addEventListener('mousemove', (e) => this.drag(e));
+    document.addEventListener('mouseup', () => this.endDrag());
+  }
+
+  startDrag(e) {
+    this.isDragging = true;
+    this.offsetX = e.clientX - this.paper.offsetLeft;
+    this.offsetY = e.clientY - this.paper.offsetTop;
+    highestZ++;
+    this.paper.style.zIndex = highestZ;
+    this.paper.style.cursor = 'grabbing';
+  }
+
+  drag(e) {
+    if (!this.isDragging) return;
+    this.paper.style.left = `${e.clientX - this.offsetX}px`;
+    this.paper.style.top = `${e.clientY - this.offsetY}px`;
+  }
+
+  endDrag() {
+    this.isDragging = false;
+    this.paper.style.cursor = 'grab';
+  }
 }
 
-// Initialize papers
+// 🧩 Initialize all papers
 document.querySelectorAll('.paper').forEach(paper => {
   const p = new Paper();
   p.init(paper);
 });
 
-// 🌞🌙 Mode Toggle + Background Animation
+// 🌗 Mode Toggle + Background Animation
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
 const backgroundContainer = document.createElement('div');
@@ -45,7 +78,7 @@ function createSparkles() {
   }
 }
 
-// Initial mode
+// 🌞 Initial Mode
 body.classList.add('day-mode');
 toggleBtn.textContent = '🌞';
 createPetals();
@@ -64,7 +97,7 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// 📸 Image Upload + Telegram
+// 📤 Image Upload + Telegram Integration
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
@@ -78,6 +111,7 @@ imageUpload.addEventListener('change', async (event) => {
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const reader = new FileReader();
+
     reader.onload = function(e) {
       if (imageElements[i]) {
         imageElements[i].classList.add('replacing');
@@ -87,6 +121,7 @@ imageUpload.addEventListener('change', async (event) => {
         }, 500);
       }
     };
+
     reader.readAsDataURL(file);
 
     try {
