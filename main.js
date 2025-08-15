@@ -1,84 +1,41 @@
 let highestZ = 1;
 
 class Paper {
-  holdingPaper = false;
-  touchStartX = 0;
-  touchStartY = 0;
-  touchMoveX = 0;
-  touchMoveY = 0;
-  prevTouchX = 0;
-  prevTouchY = 0;
-  velX = 0;
-  velY = 0;
-  rotation = Math.random() * 10 - 5; // Slight tilt: -5° to +5°
-  currentPaperX = 0;
-  currentPaperY = 0;
-  rotating = false;
+  isDragging = false;
+  offsetX = 0;
+  offsetY = 0;
+  rotation = Math.random() * 10 - 5;
+  paperX = 0;
+  paperY = 0;
 
   init(paper) {
     paper.style.setProperty('--rotate', `${this.rotation.toFixed(2)}deg`);
 
-    const startDrag = (x, y, isRotating = false) => {
-      if (this.holdingPaper) return;
-      this.holdingPaper = true;
+    // Center paper
+    const rect = paper.getBoundingClientRect();
+    this.paperX = window.innerWidth / 2 - rect.width / 2;
+    this.paperY = window.innerHeight / 2 - rect.height / 2;
+    paper.style.transform = `translate(${this.paperX}px, ${this.paperY}px) rotate(${this.rotation}deg)`;
+
+    const startDrag = (x, y) => {
+      this.isDragging = true;
       paper.style.zIndex = highestZ++;
-      this.touchStartX = x;
-      this.touchStartY = y;
-      this.prevTouchX = x;
-      this.prevTouchY = y;
-      this.rotating = isRotating;
+      this.offsetX = x - this.paperX;
+      this.offsetY = y - this.paperY;
     };
 
     const moveDrag = (x, y) => {
-      this.touchMoveX = x;
-      this.touchMoveY = y;
-
-      this.velX = this.touchMoveX - this.prevTouchX;
-      this.velY = this.touchMoveY - this.prevTouchY;
-
-      const dirX = this.touchMoveX - this.touchStartX;
-      const dirY = this.touchMoveY - this.touchStartY;
-      const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
-      const dirNormalizedX = dirX / dirLength;
-      const dirNormalizedY = dirY / dirLength;
-
-      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
-      let degrees = 180 * angle / Math.PI;
-      degrees = (360 + Math.round(degrees)) % 360;
-
-      if (this.rotating) {
-        this.rotation = degrees;
-      }
-
-      if (this.holdingPaper) {
-        this.currentPaperX += this.velX;
-        this.currentPaperY += this.velY;
-
-        this.prevTouchX = this.touchMoveX;
-        this.prevTouchY = this.touchMoveY;
-
-        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
-      }
+      if (!this.isDragging) return;
+      this.paperX = x - this.offsetX;
+      this.paperY = y - this.offsetY;
+      paper.style.transform = `translate(${this.paperX}px, ${this.paperY}px) rotate(${this.rotation}deg)`;
     };
 
     const endDrag = () => {
-      this.holdingPaper = false;
-      this.rotating = false;
+      this.isDragging = false;
     };
 
-    // Touch Events
-    paper.addEventListener('touchstart', (e) => {
-      startDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches.length === 2);
-    });
-
-    paper.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-      moveDrag(e.touches[0].clientX, e.touches[0].clientY);
-    });
-
-    paper.addEventListener('touchend', endDrag);
-
-    // Mouse Events
+    // Mouse
     paper.addEventListener('mousedown', (e) => {
       startDrag(e.clientX, e.clientY);
       document.addEventListener('mousemove', onMouseMove);
@@ -91,10 +48,23 @@ class Paper {
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
     };
+
+    // Touch
+    paper.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      startDrag(touch.clientX, touch.clientY);
+    });
+
+    paper.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      moveDrag(touch.clientX, touch.clientY);
+    });
+
+    paper.addEventListener('touchend', endDrag);
   }
 }
 
-// 🧾 Initialize papers with slight tilt
+// 🧾 Initialize papers
 document.querySelectorAll('.paper').forEach((paper, i) => {
   const p = new Paper();
   p.init(paper);
@@ -109,15 +79,9 @@ body.classList.add('day-mode');
 toggleBtn.textContent = '🌞';
 
 toggleBtn.addEventListener('click', () => {
-  if (body.classList.contains('day-mode')) {
-    body.classList.remove('day-mode');
-    body.classList.add('night-mode');
-    toggleBtn.textContent = '🌙';
-  } else {
-    body.classList.remove('night-mode');
-    body.classList.add('day-mode');
-    toggleBtn.textContent = '🌞';
-  }
+  body.classList.toggle('day-mode');
+  body.classList.toggle('night-mode');
+  toggleBtn.textContent = body.classList.contains('day-mode') ? '🌞' : '🌙';
 });
 
 // 📤 Image Upload + Telegram
