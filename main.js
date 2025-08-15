@@ -16,8 +16,12 @@ class Paper {
   rotating = false;
 
   init(paper) {
-    // Apply initial tilt
-    paper.style.setProperty('--rotate', `${this.rotation.toFixed(2)}deg`);
+    // 🆕 Random starting position
+    this.currentPaperX = Math.random() * window.innerWidth * 0.6;
+    this.currentPaperY = Math.random() * window.innerHeight * 0.6;
+
+    // 🆕 Apply initial transform
+    paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation.toFixed(2)}deg)`;
 
     const startDrag = (x, y, isRotating = false) => {
       if (this.holdingPaper) return;
@@ -95,13 +99,14 @@ class Paper {
   }
 }
 
-// Initialize papers
-document.querySelectorAll('.paper').forEach(paper => {
+// 🧾 Initialize papers with unique z-index
+document.querySelectorAll('.paper').forEach((paper, i) => {
   const p = new Paper();
   p.init(paper);
+  paper.style.zIndex = i + 1;
 });
 
-// Mode Toggle
+// 🌗 Mode Toggle
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
 
@@ -120,7 +125,7 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// Image Upload + Telegram
+// 📤 Image Upload + Telegram
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
