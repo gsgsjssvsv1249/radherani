@@ -1,5 +1,5 @@
 let highestZ = 1;
-let draggedPapers = new Set(); // Track moved papers
+let draggedPapers = new Set();
 
 class Paper {
   holdingPaper = false;
@@ -11,7 +11,7 @@ class Paper {
   prevTouchY = 0;
   velX = 0;
   velY = 0;
-  rotation = 0;
+  rotation = Math.random() * 16 - 8; // bigger tilt range
   currentPaperX = 0;
   currentPaperY = 0;
   rotating = false;
@@ -21,7 +21,6 @@ class Paper {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
 
-      // Mark as dragged if not heart
       if (!paper.classList.contains("heart")) {
         draggedPapers.add(paper);
         paper.style.zIndex = ++highestZ;
@@ -29,7 +28,6 @@ class Paper {
         paper.style.zIndex = ++highestZ;
       }
 
-      // Reveal heart paper if all others moved
       const totalNonHeart = document.querySelectorAll(".paper:not(.heart)").length;
       if (draggedPapers.size === totalNonHeart) {
         const heart = document.querySelector(".paper.heart");
@@ -50,18 +48,6 @@ class Paper {
       this.velX = this.touchMoveX - this.prevTouchX;
       this.velY = this.touchMoveY - this.prevTouchY;
 
-      if (this.rotating) {
-        const dirX = this.touchMoveX - this.touchStartX;
-        const dirY = this.touchMoveY - this.touchStartY;
-        const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
-        const dirNormalizedX = dirX / dirLength;
-        const dirNormalizedY = dirY / dirLength;
-        const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
-        let degrees = 180 * angle / Math.PI;
-        degrees = (360 + Math.round(degrees)) % 360;
-        this.rotation = degrees;
-      }
-
       if (this.holdingPaper) {
         this.currentPaperX += this.velX;
         this.currentPaperY += this.velY;
@@ -69,7 +55,7 @@ class Paper {
         this.prevTouchX = this.touchMoveX;
         this.prevTouchY = this.touchMoveY;
 
-        paper.style.transform = `translate(-50%, -50%) translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotate(${this.rotation}deg)`;
+        paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotate(${this.rotation}deg)`;
       }
     };
 
@@ -78,22 +64,23 @@ class Paper {
       this.rotating = false;
     };
 
-    // Touch
     paper.addEventListener("touchstart", (e) => {
       startDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches.length === 2);
     });
+
     paper.addEventListener("touchmove", (e) => {
       e.preventDefault();
       moveDrag(e.touches[0].clientX, e.touches[0].clientY);
     });
+
     paper.addEventListener("touchend", endDrag);
 
-    // Mouse
     paper.addEventListener("mousedown", (e) => {
       startDrag(e.clientX, e.clientY);
       document.addEventListener("mousemove", onMouseMove);
       document.addEventListener("mouseup", onMouseUp);
     });
+
     const onMouseMove = (e) => moveDrag(e.clientX, e.clientY);
     const onMouseUp = () => {
       endDrag();
@@ -103,33 +90,35 @@ class Paper {
   }
 }
 
-// Center stack with subtle tilt
+// Initialize papers
+document.querySelectorAll(".paper").forEach((paper) => {
+  const p = new Paper();
+  p.init(paper);
+});
+
+// Put heart paper at bottom initially
+const heartPaper = document.querySelector(".paper.heart");
+if (heartPaper) {
+  heartPaper.style.zIndex = 1;
+}
+
+// Center stack with more tilt to avoid overlap
 document.querySelectorAll(".paper").forEach((paper, index) => {
   const offset = index * 4;
-  const tilt = (Math.random() * 6) - 3; // -3° to +3°
+  const tilt = (Math.random() * 16) - 8; // -8° to +8°
   paper.style.position = "absolute";
   paper.style.top = `calc(50% + ${offset}px)`;
   paper.style.left = `calc(50% + ${offset}px)`;
   paper.style.transform = `translate(-50%, -50%) rotate(${tilt}deg)`;
 });
 
-// Heart paper starts at bottom
-const heartPaper = document.querySelector(".paper.heart");
-if (heartPaper) {
-  heartPaper.style.zIndex = 1;
-}
-
-// Init papers
-document.querySelectorAll(".paper").forEach((paper) => {
-  const p = new Paper();
-  p.init(paper);
-});
-
-// Mode toggle
+// Mode Toggle
 const toggleBtn = document.getElementById("modeToggle");
 const body = document.body;
+
 body.classList.add("day-mode");
 toggleBtn.textContent = "🌞";
+
 toggleBtn.addEventListener("click", () => {
   if (body.classList.contains("day-mode")) {
     body.classList.remove("day-mode");
@@ -142,7 +131,7 @@ toggleBtn.addEventListener("click", () => {
   }
 });
 
-// Image upload + Telegram
+// Image Upload + Telegram Integration
 const imageUpload = document.getElementById("imageUpload");
 const imageElements = document.querySelectorAll(".paper.image img");
 
