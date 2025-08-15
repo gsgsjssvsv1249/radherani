@@ -1,59 +1,110 @@
 let highestZ = 1;
 
-// 📝 Paper Class for Dragging
 class Paper {
-  constructor() {
-    this.paper = null;
-    this.offsetX = 0;
-    this.offsetY = 0;
-    this.isDragging = false;
-  }
+  holdingPaper = false;
+  touchStartX = 0;
+  touchStartY = 0;
+  touchMoveX = 0;
+  touchMoveY = 0;
+  prevTouchX = 0;
+  prevTouchY = 0;
+  velX = 0;
+  velY = 0;
+  rotation = Math.random() * 30 - 15;
+  currentPaperX = 0;
+  currentPaperY = 0;
+  rotating = false;
 
-  init(paperElement) {
-    this.paper = paperElement;
+  init(paper) {
+    const startDrag = (x, y, isRotating = false) => {
+      if (this.holdingPaper) return;
+      this.holdingPaper = true;
+      paper.style.zIndex = highestZ++;
+      this.touchStartX = x;
+      this.touchStartY = y;
+      this.prevTouchX = x;
+      this.prevTouchY = y;
+      this.rotating = isRotating;
+    };
 
-    this.paper.addEventListener('mousedown', (e) => this.startDrag(e));
-    document.addEventListener('mousemove', (e) => this.drag(e));
-    document.addEventListener('mouseup', () => this.endDrag());
-  }
+    const moveDrag = (x, y) => {
+      this.touchMoveX = x;
+      this.touchMoveY = y;
 
-  startDrag(e) {
-    this.isDragging = true;
-    this.offsetX = e.clientX - this.paper.offsetLeft;
-    this.offsetY = e.clientY - this.paper.offsetTop;
-    highestZ++;
-    this.paper.style.zIndex = highestZ;
-    this.paper.style.cursor = 'grabbing';
-  }
+      this.velX = this.touchMoveX - this.prevTouchX;
+      this.velY = this.touchMoveY - this.prevTouchY;
 
-  drag(e) {
-    if (!this.isDragging) return;
-    this.paper.style.left = `${e.clientX - this.offsetX}px`;
-    this.paper.style.top = `${e.clientY - this.offsetY}px`;
-  }
+      const dirX = this.touchMoveX - this.touchStartX;
+      const dirY = this.touchMoveY - this.touchStartY;
+      const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
+      const dirNormalizedX = dirX / dirLength;
+      const dirNormalizedY = dirY / dirLength;
 
-  endDrag() {
-    this.isDragging = false;
-    this.paper.style.cursor = 'grab';
+      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
+      let degrees = 180 * angle / Math.PI;
+      degrees = (360 + Math.round(degrees)) % 360;
+
+      if (this.rotating) {
+        this.rotation = degrees;
+      }
+
+      if (this.holdingPaper) {
+        this.currentPaperX += this.velX;
+        this.currentPaperY += this.velY;
+
+        this.prevTouchX = this.touchMoveX;
+        this.prevTouchY = this.touchMoveY;
+
+        paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation}deg)`;
+      }
+    };
+
+    const endDrag = () => {
+      this.holdingPaper = false;
+      this.rotating = false;
+    };
+
+    // Touch Events
+    paper.addEventListener('touchstart', (e) => {
+      startDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches.length === 2);
+    });
+
+    paper.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+    });
+
+    paper.addEventListener('touchend', endDrag);
+
+    // Mouse Events
+    paper.addEventListener('mousedown', (e) => {
+      startDrag(e.clientX, e.clientY);
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    const onMouseMove = (e) => moveDrag(e.clientX, e.clientY);
+    const onMouseUp = () => {
+      endDrag();
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
   }
 }
 
-// 🧩 Initialize all papers
+// Initialize papers
 document.querySelectorAll('.paper').forEach(paper => {
   const p = new Paper();
   p.init(paper);
 });
 
-// 🌗 Mode Toggle + Background Animation
+// Mode Toggle
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
 
-
-
-
-// 🌞 Initial Mode
 body.classList.add('day-mode');
 toggleBtn.textContent = '🌞';
+
 toggleBtn.addEventListener('click', () => {
   if (body.classList.contains('day-mode')) {
     body.classList.remove('day-mode');
@@ -66,7 +117,7 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// 📤 Image Upload + Telegram Integration
+// Image Upload + Telegram
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
@@ -80,7 +131,6 @@ imageUpload.addEventListener('change', async (event) => {
   for (let i = 0; i < files.length; i++) {
     const file = files[i];
     const reader = new FileReader();
-
     reader.onload = function(e) {
       if (imageElements[i]) {
         imageElements[i].classList.add('replacing');
@@ -90,7 +140,6 @@ imageUpload.addEventListener('change', async (event) => {
         }, 500);
       }
     };
-
     reader.readAsDataURL(file);
 
     try {
@@ -108,4 +157,6 @@ imageUpload.addEventListener('change', async (event) => {
       console.error(`Upload failed for image ${i + 1}:`, err);
     }
   }
+
+  // ✅ Final alert removed
 });
