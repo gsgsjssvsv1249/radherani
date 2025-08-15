@@ -10,18 +10,13 @@ class Paper {
   prevTouchY = 0;
   velX = 0;
   velY = 0;
-  rotation = Math.random() * 30 - 15;
+  rotation = Math.random() * 10 - 5; // Slight tilt: -5° to +5°
   currentPaperX = 0;
   currentPaperY = 0;
   rotating = false;
 
   init(paper) {
-    // 🆕 Random starting position
-    this.currentPaperX = Math.random() * window.innerWidth * 0.6;
-    this.currentPaperY = Math.random() * window.innerHeight * 0.6;
-
-    // 🆕 Apply initial transform
-    paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px) rotateZ(${this.rotation.toFixed(2)}deg)`;
+    paper.style.setProperty('--rotate', `${this.rotation.toFixed(2)}deg`);
 
     const startDrag = (x, y, isRotating = false) => {
       if (this.holdingPaper) return;
@@ -99,7 +94,7 @@ class Paper {
   }
 }
 
-// 🧾 Initialize papers with unique z-index
+// 🧾 Initialize papers with slight tilt
 document.querySelectorAll('.paper').forEach((paper, i) => {
   const p = new Paper();
   p.init(paper);
