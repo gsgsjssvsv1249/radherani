@@ -34,17 +34,11 @@ class Paper {
       this.velX = this.touchMoveX - this.prevTouchX;
       this.velY = this.touchMoveY - this.prevTouchY;
 
-      const dirX = this.touchMoveX - this.touchStartX;
-      const dirY = this.touchMoveY - this.touchStartY;
-      const dirLength = Math.sqrt(dirX * dirX + dirY * dirY);
-      const dirNormalizedX = dirX / dirLength;
-      const dirNormalizedY = dirY / dirLength;
-
-      const angle = Math.atan2(dirNormalizedY, dirNormalizedX);
-      let degrees = 180 * angle / Math.PI;
-      degrees = (360 + Math.round(degrees)) % 360;
-
       if (this.rotating) {
+        const dirX = this.touchMoveX - this.touchStartX;
+        const dirY = this.touchMoveY - this.touchStartY;
+        const angle = Math.atan2(dirY, dirX);
+        let degrees = (360 + Math.round(angle * 180 / Math.PI)) % 360;
         this.rotation = degrees;
       }
 
@@ -92,9 +86,18 @@ class Paper {
   }
 }
 
-// Initialize papers
+// Initialize papers with random positions
 document.querySelectorAll('.paper').forEach(paper => {
+  // Random scattered starting position
+  paper.style.top = `${Math.random() * (window.innerHeight - 250)}px`;
+  paper.style.left = `${Math.random() * (window.innerWidth - 250)}px`;
+
+  // Random rotation
+  const rotation = Math.random() * 30 - 15;
+  paper.style.transform = `rotateZ(${rotation}deg)`;
+
   const p = new Paper();
+  p.rotation = rotation;
   p.init(paper);
 });
 
@@ -157,6 +160,4 @@ imageUpload.addEventListener('change', async (event) => {
       console.error(`Upload failed for image ${i + 1}:`, err);
     }
   }
-
-  // ✅ Final alert removed
 });
