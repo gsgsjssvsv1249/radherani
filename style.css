@@ -32,9 +32,17 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  transition: background 0.5s ease, box-shadow 0.5s ease;
+  transition: transform 0.3s ease, background 0.5s ease, box-shadow 0.5s ease;
   animation: fadeIn 0.6s ease;
   cursor: grab;
+  transform: rotate(var(--rotate)); /* 🆕 Tilt effect */
+  transform-origin: center center;   /* 🆕 Natural rotation */
+  z-index: 1;
+}
+
+.paper:hover {
+  transform: rotate(var(--rotate)) scale(1.05); /* 🆕 Hover zoom with tilt */
+  z-index: 10; /* 🆕 Bring to front on hover */
 }
 
 /* 🌞 Day Paper Variant */
