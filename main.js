@@ -3,6 +3,7 @@ let draggedPapers = new Set();
 
 class Paper {
   holdingPaper = false;
+  dragStarted = false;
   touchStartX = 0;
   touchStartY = 0;
   touchMoveX = 0;
@@ -14,76 +15,85 @@ class Paper {
   rotation = Math.random() * 16 - 8; // bigger tilt range
   currentPaperX = 0;
   currentPaperY = 0;
-  rotating = false;
 
   init(paper) {
-    const startDrag = (x, y, isRotating = false) => {
-      if (this.holdingPaper) return;
+    const startHold = (x, y) => {
       this.holdingPaper = true;
-
-      if (!paper.classList.contains("heart")) {
-        draggedPapers.add(paper);
-        paper.style.zIndex = ++highestZ;
-      } else {
-        paper.style.zIndex = ++highestZ;
-      }
-
-      const totalNonHeart = document.querySelectorAll(".paper:not(.heart)").length;
-      if (draggedPapers.size === totalNonHeart) {
-        const heart = document.querySelector(".paper.heart");
-        heart.style.zIndex = ++highestZ;
-      }
-
+      this.dragStarted = false; // reset drag flag
       this.touchStartX = x;
       this.touchStartY = y;
       this.prevTouchX = x;
       this.prevTouchY = y;
-      this.rotating = isRotating;
     };
 
-    const moveDrag = (x, y) => {
-      this.touchMoveX = x;
-      this.touchMoveY = y;
+    const startDrag = () => {
+      if (!this.dragStarted) {
+        // Mark this paper as moved (except heart)
+        if (!paper.classList.contains("heart")) {
+          draggedPapers.add(paper);
+          paper.style.zIndex = ++highestZ;
+        } else {
+          paper.style.zIndex = ++highestZ;
+        }
 
-      this.velX = this.touchMoveX - this.prevTouchX;
-      this.velY = this.touchMoveY - this.prevTouchY;
+        // Reveal heart paper only when all others moved
+        const totalNonHeart = document.querySelectorAll(".paper:not(.heart)").length;
+        if (draggedPapers.size === totalNonHeart) {
+          const heart = document.querySelector(".paper.heart");
+          heart.style.zIndex = ++highestZ;
+        }
 
-      if (this.holdingPaper) {
+        this.dragStarted = true;
+      }
+    };
+
+    const moveHold = (x, y) => {
+      const dx = x - this.touchStartX;
+      const dy = y - this.touchStartY;
+
+      // Only start drag if moved enough (5px threshold)
+      if (!this.dragStarted && Math.sqrt(dx * dx + dy * dy) > 5) {
+        startDrag();
+      }
+
+      if (this.holdingPaper && this.dragStarted) {
+        this.velX = x - this.prevTouchX;
+        this.velY = y - this.prevTouchY;
+
         this.currentPaperX += this.velX;
         this.currentPaperY += this.velY;
 
-        this.prevTouchX = this.touchMoveX;
-        this.prevTouchY = this.touchMoveY;
+        this.prevTouchX = x;
+        this.prevTouchY = y;
 
         paper.style.transform = `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotate(${this.rotation}deg)`;
       }
     };
 
-    const endDrag = () => {
+    const endHold = () => {
       this.holdingPaper = false;
-      this.rotating = false;
+      this.dragStarted = false;
     };
 
+    // Touch events
     paper.addEventListener("touchstart", (e) => {
-      startDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches.length === 2);
+      startHold(e.touches[0].clientX, e.touches[0].clientY);
     });
-
     paper.addEventListener("touchmove", (e) => {
       e.preventDefault();
-      moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+      moveHold(e.touches[0].clientX, e.touches[0].clientY);
     });
+    paper.addEventListener("touchend", endHold);
 
-    paper.addEventListener("touchend", endDrag);
-
+    // Mouse events
     paper.addEventListener("mousedown", (e) => {
-      startDrag(e.clientX, e.clientY);
+      startHold(e.clientX, e.clientY);
       document.addEventListener("mousemove", onMouseMove);
       document.addEventListener("mouseup", onMouseUp);
     });
-
-    const onMouseMove = (e) => moveDrag(e.clientX, e.clientY);
+    const onMouseMove = (e) => moveHold(e.clientX, e.clientY);
     const onMouseUp = () => {
-      endDrag();
+      endHold();
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
     };
@@ -102,13 +112,14 @@ if (heartPaper) {
   heartPaper.style.zIndex = 1;
 }
 
-// Center stack with more tilt to avoid overlap
+// Center stack with tilt + random small offset to prevent overlap
 document.querySelectorAll(".paper").forEach((paper, index) => {
-  const offset = index * 4;
+  const offsetX = (Math.random() * 30) - 15; // -15px to +15px
+  const offsetY = (Math.random() * 30) - 15;
   const tilt = (Math.random() * 16) - 8; // -8° to +8°
   paper.style.position = "absolute";
-  paper.style.top = `calc(50% + ${offset}px)`;
-  paper.style.left = `calc(50% + ${offset}px)`;
+  paper.style.top = `calc(50% + ${offsetY}px)`;
+  paper.style.left = `calc(50% + ${offsetX}px)`;
   paper.style.transform = `translate(-50%, -50%) rotate(${tilt}deg)`;
 });
 
