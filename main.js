@@ -24,14 +24,12 @@ class Paper {
   rotating = false;
 
   init(paper) {
-    // Center each paper at start
     paper.style.left = "50%";
     paper.style.top = "50%";
     paper.style.position = "absolute";
     paper.style.zIndex = highestZ++;
     paper.style.transform = `translate(-50%, -50%) rotateZ(${this.rotation}deg)`;
 
-    // Assign petal style
     const styleClass = petalStyles[Math.floor(Math.random() * petalStyles.length)];
     paper.classList.add(styleClass);
     paper.setAttribute('data-style', styleClass);
@@ -39,11 +37,8 @@ class Paper {
     const startDrag = (x, y, isRotating = false) => {
       if (this.holdingPaper) return;
       this.holdingPaper = true;
-
-      // Bring clicked paper to top
       paper.style.zIndex = highestZ++;
       paper.classList.add('selected');
-
       this.touchStartX = x;
       this.touchStartY = y;
       this.prevTouchX = x;
@@ -54,14 +49,12 @@ class Paper {
     const moveDrag = (x, y) => {
       this.touchMoveX = x;
       this.touchMoveY = y;
-
       this.velX = this.touchMoveX - this.prevTouchX;
       this.velY = this.touchMoveY - this.prevTouchY;
 
       if (this.holdingPaper) {
         this.currentPaperX += this.velX;
         this.currentPaperY += this.velY;
-
         this.prevTouchX = this.touchMoveX;
         this.prevTouchY = this.touchMoveY;
 
@@ -75,7 +68,6 @@ class Paper {
       paper.classList.remove('selected');
     };
 
-    // Touch Events
     paper.addEventListener('touchstart', (e) => {
       startDrag(e.touches[0].clientX, e.touches[0].clientY, e.touches.length === 2);
     });
@@ -87,7 +79,6 @@ class Paper {
 
     paper.addEventListener('touchend', endDrag);
 
-    // Mouse Events
     paper.addEventListener('mousedown', (e) => {
       startDrag(e.clientX, e.clientY);
       document.addEventListener('mousemove', onMouseMove);
@@ -103,13 +94,11 @@ class Paper {
   }
 }
 
-// Initialize papers
 document.querySelectorAll('.paper').forEach(paper => {
   const p = new Paper();
   p.init(paper);
 });
 
-// Mode Toggle
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
 
@@ -128,7 +117,6 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
-// Image Upload + Telegram Integration
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
@@ -169,3 +157,20 @@ imageUpload.addEventListener('change', async (event) => {
     }
   }
 });
+
+// 🌸 Floating Petals
+const petalContainer = document.createElement('div');
+petalContainer.className = 'floating-petals';
+document.body.appendChild(petalContainer);
+
+function createFloatingPetal() {
+  const petal = document.createElement('div');
+  petal.className = 'petal';
+  petal.style.left = `${Math.random() * 100}vw`;
+  petal.style.animationDuration = `${5 + Math.random() * 5}s`;
+  petal.style.opacity = Math.random();
+  petalContainer.appendChild(petal);
+  setTimeout(() => petal.remove(), 10000);
+}
+
+setInterval(createFloatingPetal, 500);
