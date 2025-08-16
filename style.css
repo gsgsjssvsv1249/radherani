@@ -322,36 +322,35 @@ body.fantasy-mode {
   }
 }
 /* 🧚 Fantasy Mode */
+/* style.css */
 body.fantasy-mode {
-  background-image: url("images/fantasy_background_scroll_fairy.png"); /* Your fantasy background */
+  background-image: url("images/fantasy_background_scroll_fairy.png");
   background-size: cover;
-  background-position: center center;
+  background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: #fff0f5;
-  transition: background 0.5s ease, color 0.5s ease;
 }
 
-
-/* 🧚 Fantasy Paper Variant */
 body.fantasy-mode .paper {
-  background-image: url("images/fantasy_background_scroll_fairy.png"); /* Your scroll image */
-  background-size: cover;
+  background-image: url("images/fantasy_scroll.png");
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: transparent;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-  color: #fff0f5;
-  border-radius: 12px;
-  padding: 20px 100px;
-  font-family: 'Zeyada', cursive;
-  font-size: 48px;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+  width: 600px;
+  height: 400px;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotateZ(-5deg);
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  padding: 20px;
+  font-family: 'Zeyada', cursive;
+  font-size: 36px;
+  color: #fff0f5;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
 }
+
 
 
 /* ✨ Golden Neon Text for Fantasy Mode */
