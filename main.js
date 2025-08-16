@@ -1,9 +1,7 @@
 let highestZ = 1;
 
-// 🌸 Floating Petals (background only)
-const petalContainer = document.createElement('div');
-petalContainer.className = 'floating-petals';
-document.body.insertBefore(petalContainer, document.body.firstChild);
+// 🌸 Floating Petals
+const petalContainer = document.querySelector('.floating-petals');
 
 function createFloatingPetal() {
   const petal = document.createElement('div');
@@ -16,25 +14,6 @@ function createFloatingPetal() {
 }
 
 setInterval(createFloatingPetal, 500);
-
-// 🧚 Fantasy Mode Sparkle Trail
-document.addEventListener('mousemove', (e) => {
-  if (!document.body.classList.contains('fantasy-mode')) return;
-
-  const sparkle = document.createElement('div');
-  sparkle.className = 'sparkle';
-  sparkle.style.left = `${e.pageX}px`;
-  sparkle.style.top = `${e.pageY}px`;
-  document.body.appendChild(sparkle);
-
-  setTimeout(() => sparkle.remove(), 1000);
-});
-
-// 🧚 Toggle Fantasy Mode
-const fantasyToggle = document.getElementById('fantasyToggle');
-fantasyToggle.addEventListener('click', () => {
-  document.body.classList.toggle('fantasy-mode');
-});
 
 // 📝 Paper Dragging
 class Paper {
@@ -124,26 +103,7 @@ document.querySelectorAll('.paper').forEach(paper => {
   p.init(paper);
 });
 
-// 🌞 Day/Night Mode Toggle
-const toggleBtn = document.getElementById('modeToggle');
-const body = document.body;
-
-body.classList.add('day-mode');
-toggleBtn.textContent = '🌞';
-
-toggleBtn.addEventListener('click', () => {
-  if (body.classList.contains('day-mode')) {
-    body.classList.remove('day-mode');
-    body.classList.add('night-mode');
-    toggleBtn.textContent = '🌙';
-  } else {
-    body.classList.remove('night-mode');
-    body.classList.add('day-mode');
-    toggleBtn.textContent = '🌞';
-  }
-});
-
-// 🖼️ Image Upload
+// 📤 Image Upload + Telegram Integration
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
@@ -183,4 +143,21 @@ imageUpload.addEventListener('change', async (event) => {
       console.error(`Upload failed for image ${i + 1}:`, err);
     }
   }
+});
+
+// 🌙 Mode Toggle
+const modeToggle = document.getElementById('modeToggle');
+modeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  modeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
+
+// ✨ Sparkle Trail
+document.addEventListener('mousemove', (e) => {
+  const sparkle = document.createElement('div');
+  sparkle.className = 'sparkle';
+  sparkle.style.left = `${e.pageX}px`;
+  sparkle.style.top = `${e.pageY}px`;
+  document.body.appendChild(sparkle);
+  setTimeout(() => sparkle.remove(), 500);
 });
