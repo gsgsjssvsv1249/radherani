@@ -161,3 +161,66 @@ document.addEventListener('mousemove', (e) => {
   document.body.appendChild(sparkle);
   setTimeout(() => sparkle.remove(), 500);
 });
+
+// 🌗 Mode Toggle Button
+const modeToggle = document.getElementById('modeToggle');
+const body = document.body;
+
+modeToggle.addEventListener('click', () => {
+  if (body.classList.contains('day-mode')) {
+    body.classList.remove('day-mode');
+    body.classList.add('fantasy-mode');
+    modeToggle.textContent = '🧚';
+  } else {
+    body.classList.remove('fantasy-mode');
+    body.classList.add('day-mode');
+    modeToggle.textContent = '🌞';
+  }
+});
+
+// 🌞 Reality & 🧚 Fantasy Buttons
+const realityBtn = document.getElementById('realityBtn');
+const fantasyBtn = document.getElementById('fantasyBtn');
+
+realityBtn.addEventListener('click', () => {
+  body.classList.remove('fantasy-mode');
+  body.classList.add('day-mode');
+  modeToggle.textContent = '🌞';
+});
+
+fantasyBtn.addEventListener('click', () => {
+  body.classList.remove('day-mode');
+  body.classList.add('fantasy-mode');
+  modeToggle.textContent = '🧚';
+});
+
+// 🖼️ Dragging Papers
+const papers = document.querySelectorAll('.paper');
+papers.forEach(paper => {
+  paper.addEventListener('mousedown', function (e) {
+    paper.style.zIndex = 1000;
+    paper.style.position = 'absolute';
+
+    function moveAt(pageX, pageY) {
+      paper.style.left = pageX - paper.offsetWidth / 2 + 'px';
+      paper.style.top = pageY - paper.offsetHeight / 2 + 'px';
+    }
+
+    moveAt(e.pageX, e.pageY);
+
+    function onMouseMove(e) {
+      moveAt(e.pageX, e.pageY);
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+
+    paper.onmouseup = function () {
+      document.removeEventListener('mousemove', onMouseMove);
+      paper.onmouseup = null;
+    };
+  });
+
+  paper.ondragstart = function () {
+    return false;
+  };
+});
