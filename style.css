@@ -335,11 +335,11 @@ body.fantasy-mode {
 
 /* 🧚 Fantasy Paper Variant */
 body.fantasy-mode .paper {
-  background-image: url("images/fantasy_scroll.png"); /* Your scroll image */
+  background-image: url("images/fantasy_background_scroll_fairy.png"); /* Your scroll image */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: transparent;
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
   color: #fff0f5;
   border-radius: 12px;
@@ -352,6 +352,7 @@ body.fantasy-mode .paper {
   left: 50%;
   transform: translate(-50%, -50%) rotateZ(-5deg);
 }
+
 
 /* ✨ Golden Neon Text for Fantasy Mode */
 body.fantasy-mode p,
