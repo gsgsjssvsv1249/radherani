@@ -1,5 +1,13 @@
 let highestZ = 1;
 
+const petalStyles = [
+  'velvety-rose',
+  'translucent-lily',
+  'papery-poppy',
+  'orchid-glow',
+  'cherry-blossom'
+];
+
 class Paper {
   holdingPaper = false;
   touchStartX = 0;
@@ -22,6 +30,11 @@ class Paper {
     paper.style.position = "absolute";
     paper.style.zIndex = highestZ++;
     paper.style.transform = `translate(-50%, -50%) rotateZ(${this.rotation}deg)`;
+
+    // Assign petal style
+    const styleClass = petalStyles[Math.floor(Math.random() * petalStyles.length)];
+    paper.classList.add(styleClass);
+    paper.setAttribute('data-style', styleClass);
 
     const startDrag = (x, y, isRotating = false) => {
       if (this.holdingPaper) return;
