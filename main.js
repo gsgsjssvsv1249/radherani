@@ -103,7 +103,7 @@ document.querySelectorAll('.paper').forEach(paper => {
   p.init(paper);
 });
 
-// 📤 Image Upload + Telegram Integration
+// 📤 Image Upload
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
@@ -145,19 +145,18 @@ imageUpload.addEventListener('change', async (event) => {
   }
 });
 
-// 🌗 Mode Toggle Button
+// 🌗 Mode Toggle Button (cycles through day → night → fantasy)
 const modeToggle = document.getElementById('modeToggle');
+const body = document.body;
+const modes = ['day-mode', 'night-mode', 'fantasy-mode'];
+let currentMode = 0;
+
 modeToggle.addEventListener('click', () => {
-  const body = document.body;
-  if (body.classList.contains('day-mode')) {
-    body.classList.remove('day-mode');
-    body.classList.add('fantasy-mode');
-    modeToggle.textContent = '🧚';
-  } else {
-    body.classList.remove('fantasy-mode');
-    body.classList.add('day-mode');
-    modeToggle.textContent = '🌞';
-  }
+  body.classList.remove(modes[currentMode]);
+  currentMode = (currentMode + 1) % modes.length;
+  body.classList.add(modes[currentMode]);
+
+  modeToggle.textContent = currentMode === 0 ? '🌞' : currentMode === 1 ? '🌙' : '🧚';
 });
 
 // 🌞 Reality & 🧚 Fantasy Buttons
@@ -165,20 +164,22 @@ const realityBtn = document.getElementById('realityBtn');
 const fantasyBtn = document.getElementById('fantasyBtn');
 
 realityBtn.addEventListener('click', () => {
-  document.body.classList.remove('fantasy-mode');
-  document.body.classList.add('day-mode');
+  body.classList.remove('night-mode', 'fantasy-mode');
+  body.classList.add('day-mode');
+  currentMode = 0;
   modeToggle.textContent = '🌞';
 });
 
 fantasyBtn.addEventListener('click', () => {
-  document.body.classList.remove('day-mode');
-  document.body.classList.add('fantasy-mode');
+  body.classList.remove('day-mode', 'night-mode');
+  body.classList.add('fantasy-mode');
+  currentMode = 2;
   modeToggle.textContent = '🧚';
 });
 
-// ✨ Sparkle Trail
+// ✨ Sparkle Trail (only in fantasy mode)
 document.addEventListener('mousemove', (e) => {
-  if (!document.body.classList.contains('fantasy-mode')) return;
+  if (!body.classList.contains('fantasy-mode')) return;
 
   const sparkle = document.createElement('div');
   sparkle.className = 'sparkle';
