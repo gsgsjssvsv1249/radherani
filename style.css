@@ -335,7 +335,7 @@ body.fantasy-mode {
 
 /* 🧚 Fantasy Paper Variant */
 body.fantasy-mode .paper {
-  background-image: url("images/fantasy_scroll_heart.png"); /* Your scroll image */
+  background-image: url("images/fantasy_scroll.png"); /* Your scroll image */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
