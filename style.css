@@ -294,3 +294,30 @@ body.night-mode .upload-btn {
   border-radius: 50%;
   box-shadow: inset 0 0 5px rgba(255, 182, 193, 0.5), 0 0 10px rgba(255, 192, 203, 0.3);
 }
+/* 🧚 Fantasy Mode Cursor */
+body.fantasy-mode {
+  cursor: url('images/wand-cursor.png'), auto; /* Make sure this image exists in your project */
+}
+
+/* ✨ Sparkle Trail */
+.sparkle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, gold, transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: sparkleFade 1s ease-out;
+  z-index: 999;
+}
+
+@keyframes sparkleFade {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
