@@ -8,6 +8,23 @@ const petalStyles = [
   'cherry-blossom'
 ];
 
+// 🌸 Floating Petals (background)
+const petalContainer = document.createElement('div');
+petalContainer.className = 'floating-petals';
+document.body.insertBefore(petalContainer, document.body.firstChild);
+
+function createFloatingPetal() {
+  const petal = document.createElement('div');
+  petal.className = 'petal';
+  petal.style.left = `${Math.random() * 100}vw`;
+  petal.style.animationDuration = `${5 + Math.random() * 5}s`;
+  petal.style.opacity = Math.random();
+  petalContainer.appendChild(petal);
+  setTimeout(() => petal.remove(), 10000);
+}
+
+setInterval(createFloatingPetal, 500);
+
 class Paper {
   holdingPaper = false;
   touchStartX = 0;
@@ -157,20 +174,3 @@ imageUpload.addEventListener('change', async (event) => {
     }
   }
 });
-
-// 🌸 Floating Petals
-const petalContainer = document.createElement('div');
-petalContainer.className = 'floating-petals';
-document.body.appendChild(petalContainer);
-
-function createFloatingPetal() {
-  const petal = document.createElement('div');
-  petal.className = 'petal';
-  petal.style.left = `${Math.random() * 100}vw`;
-  petal.style.animationDuration = `${5 + Math.random() * 5}s`;
-  petal.style.opacity = Math.random();
-  petalContainer.appendChild(petal);
-  setTimeout(() => petal.remove(), 10000);
-}
-
-setInterval(createFloatingPetal, 500);
