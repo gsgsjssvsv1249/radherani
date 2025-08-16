@@ -145,28 +145,10 @@ imageUpload.addEventListener('change', async (event) => {
   }
 });
 
-// 🌙 Mode Toggle
-const modeToggle = document.getElementById('modeToggle');
-modeToggle.addEventListener('click', () => {
-  document.body.classList.toggle('dark-mode');
-  modeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-});
-
-// ✨ Sparkle Trail
-document.addEventListener('mousemove', (e) => {
-  const sparkle = document.createElement('div');
-  sparkle.className = 'sparkle';
-  sparkle.style.left = `${e.pageX}px`;
-  sparkle.style.top = `${e.pageY}px`;
-  document.body.appendChild(sparkle);
-  setTimeout(() => sparkle.remove(), 500);
-});
-
 // 🌗 Mode Toggle Button
 const modeToggle = document.getElementById('modeToggle');
-const body = document.body;
-
 modeToggle.addEventListener('click', () => {
+  const body = document.body;
   if (body.classList.contains('day-mode')) {
     body.classList.remove('day-mode');
     body.classList.add('fantasy-mode');
@@ -183,44 +165,25 @@ const realityBtn = document.getElementById('realityBtn');
 const fantasyBtn = document.getElementById('fantasyBtn');
 
 realityBtn.addEventListener('click', () => {
-  body.classList.remove('fantasy-mode');
-  body.classList.add('day-mode');
+  document.body.classList.remove('fantasy-mode');
+  document.body.classList.add('day-mode');
   modeToggle.textContent = '🌞';
 });
 
 fantasyBtn.addEventListener('click', () => {
-  body.classList.remove('day-mode');
-  body.classList.add('fantasy-mode');
+  document.body.classList.remove('day-mode');
+  document.body.classList.add('fantasy-mode');
   modeToggle.textContent = '🧚';
 });
 
-// 🖼️ Dragging Papers
-const papers = document.querySelectorAll('.paper');
-papers.forEach(paper => {
-  paper.addEventListener('mousedown', function (e) {
-    paper.style.zIndex = 1000;
-    paper.style.position = 'absolute';
+// ✨ Sparkle Trail
+document.addEventListener('mousemove', (e) => {
+  if (!document.body.classList.contains('fantasy-mode')) return;
 
-    function moveAt(pageX, pageY) {
-      paper.style.left = pageX - paper.offsetWidth / 2 + 'px';
-      paper.style.top = pageY - paper.offsetHeight / 2 + 'px';
-    }
-
-    moveAt(e.pageX, e.pageY);
-
-    function onMouseMove(e) {
-      moveAt(e.pageX, e.pageY);
-    }
-
-    document.addEventListener('mousemove', onMouseMove);
-
-    paper.onmouseup = function () {
-      document.removeEventListener('mousemove', onMouseMove);
-      paper.onmouseup = null;
-    };
-  });
-
-  paper.ondragstart = function () {
-    return false;
-  };
+  const sparkle = document.createElement('div');
+  sparkle.className = 'sparkle';
+  sparkle.style.left = `${e.pageX}px`;
+  sparkle.style.top = `${e.pageY}px`;
+  document.body.appendChild(sparkle);
+  setTimeout(() => sparkle.remove(), 500);
 });
