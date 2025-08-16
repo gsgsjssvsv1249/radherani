@@ -323,7 +323,7 @@ body.fantasy-mode {
 }
 /* 🧚 Fantasy Mode */
 body.fantasy-mode {
-  background-image: url("images/fantasy_background_scroll_fairy.png"); /* Replace with your actual image path */
+  background-image: url("images/fantasy_background_scroll_fairy.webp"); /* Replace with your actual image path */
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -333,7 +333,7 @@ body.fantasy-mode {
 
 /* 🧚 Fantasy Paper Variant */
 body.fantasy-mode .paper {
-  background-image: url("images/fantasy_scroll.png"); /* Replace with your actual scroll image */
+  background-image: url("images/fantasy_scroll.webp"); /* Replace with your actual scroll image */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
