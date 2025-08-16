@@ -17,6 +17,26 @@ function createFloatingPetal() {
 
 setInterval(createFloatingPetal, 500);
 
+// 🧚 Fantasy Mode Sparkle Trail
+document.addEventListener('mousemove', (e) => {
+  if (!document.body.classList.contains('fantasy-mode')) return;
+
+  const sparkle = document.createElement('div');
+  sparkle.className = 'sparkle';
+  sparkle.style.left = `${e.pageX}px`;
+  sparkle.style.top = `${e.pageY}px`;
+  document.body.appendChild(sparkle);
+
+  setTimeout(() => sparkle.remove(), 1000);
+});
+
+// 🧚 Toggle Fantasy Mode
+const fantasyToggle = document.getElementById('fantasyToggle');
+fantasyToggle.addEventListener('click', () => {
+  document.body.classList.toggle('fantasy-mode');
+});
+
+// 📝 Paper Dragging
 class Paper {
   holdingPaper = false;
   touchStartX = 0;
@@ -104,6 +124,7 @@ document.querySelectorAll('.paper').forEach(paper => {
   p.init(paper);
 });
 
+// 🌞 Day/Night Mode Toggle
 const toggleBtn = document.getElementById('modeToggle');
 const body = document.body;
 
@@ -122,6 +143,7 @@ toggleBtn.addEventListener('click', () => {
   }
 });
 
+// 🖼️ Image Upload
 const imageUpload = document.getElementById('imageUpload');
 const imageElements = document.querySelectorAll('.paper.image img');
 
