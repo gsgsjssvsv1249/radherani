@@ -1,17 +1,34 @@
 let highestZ = 1;
 
-// 🌸 Floating Petals (background only)
+// 🌸 Floating Petals (with multiple types)
 const petalContainer = document.createElement('div');
 petalContainer.className = 'floating-petals';
 document.body.insertBefore(petalContainer, document.body.firstChild);
 
+const petalImages = [
+  'https://cdn.pixabay.com/photo/2016/03/31/19/25/pink-1294994_1280.png', // pink cherry blossom
+  'https://cdn.pixabay.com/photo/2017/08/30/07/52/flower-2694464_1280.png', // yellow daisy
+  'https://cdn.pixabay.com/photo/2016/03/27/21/34/leaf-1283608_1280.png', // autumn leaf
+  'https://cdn.pixabay.com/photo/2014/04/03/10/32/flower-310971_1280.png', // purple petal
+  'https://cdn.pixabay.com/photo/2017/01/06/19/15/rose-1956280_1280.png'  // red rose petal
+];
+
 function createFloatingPetal() {
   const petal = document.createElement('div');
   petal.className = 'petal';
+
+  const randomImage = petalImages[Math.floor(Math.random() * petalImages.length)];
+  petal.style.backgroundImage = `url('${randomImage}')`;
+
+  const size = 15 + Math.random() * 20;
+  petal.style.width = `${size}px`;
+  petal.style.height = `${size}px`;
+
   petal.style.left = `${Math.random() * 100}vw`;
   petal.style.animationDuration = `${5 + Math.random() * 5}s`;
   petal.style.opacity = Math.random();
   petalContainer.appendChild(petal);
+
   setTimeout(() => petal.remove(), 10000);
 }
 
