@@ -296,7 +296,7 @@ body.night-mode .upload-btn {
 }
 /* 🧚 Fantasy Mode Cursor */
 body.fantasy-mode {
-  cursor: url('images/wand-cursor.png'), auto; /* Make sure this image exists in your project */
+  cursor: url('images/wand_cursor.jpg'), auto; /* Make sure this image exists in your project */
 }
 
 /* ✨ Sparkle Trail */
