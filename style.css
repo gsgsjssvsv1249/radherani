@@ -346,3 +346,16 @@ body.fantasy-mode .paper {
   font-size: 48px;
   text-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
 }
+/* ✨ Golden Neon Text for Fantasy Mode */
+body.fantasy-mode p,
+body.fantasy-mode .paper p,
+body.fantasy-mode .p1,
+body.fantasy-mode .p2 {
+  color: #ffd700; /* Golden yellow */
+  text-shadow:
+    0 0 5px #ffd700,
+    0 0 10px #ffec8b,
+    0 0 15px #fffacd,
+    0 0 20px #ffd700;
+  opacity: 1;
+}
