@@ -382,15 +382,3 @@ body.fantasy-mode .p2 {
   0%, 100% { opacity: 0.2; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.5); }
 }
-.floating-fairy {
-  position: fixed;
-  top: -100px;
-  width: 80px;
-  height: 80px;
-  background-image: url("images/fairy.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  animation: floatFairy linear forwards;
-  pointer-events: none; /* 👈 This lets clicks pass through */
-  z-index: 9999;
-}
