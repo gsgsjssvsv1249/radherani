@@ -31,31 +31,30 @@ function createStar() {
 
 setInterval(createStar, 300);
 
-// 🧚‍♀️ Randomly Moving Fairy (Fantasy Mode)
+// 🧚‍♀️ Floating Fairy (Fantasy Mode)
 function createFairy() {
   if (!document.body.classList.contains('fantasy-mode')) return;
 
   const fairy = document.createElement('div');
   fairy.className = 'flying-fairy';
+  fairy.style.left = `${Math.random() * window.innerWidth}px`;
+  fairy.style.top = `${Math.random() * window.innerHeight}px`;
   document.body.appendChild(fairy);
 
-  let x = Math.random() * window.innerWidth;
-  let y = Math.random() * window.innerHeight;
-
-  fairy.style.left = `${x}px`;
-  fairy.style.top = `${y}px`;
-
+  let moveCount = 0;
   const moveFairy = () => {
-    x = Math.random() * window.innerWidth;
-    y = Math.random() * window.innerHeight;
+    if (moveCount >= 6) {
+      fairy.remove();
+      clearInterval(fairyInterval);
+      return;
+    }
+    const x = Math.random() * window.innerWidth;
+    const y = Math.random() * window.innerHeight;
     fairy.style.transform = `translate(${x}px, ${y}px)`;
+    moveCount++;
   };
 
-  const interval = setInterval(moveFairy, 3000);
-  setTimeout(() => {
-    clearInterval(interval);
-    fairy.remove();
-  }, 20000);
+  const fairyInterval = setInterval(moveFairy, 3000);
 }
 
 setInterval(createFairy, 30000);
