@@ -391,13 +391,6 @@ body.fantasy-mode .p2 {
   background-size: contain;
   background-repeat: no-repeat;
   animation: floatFairy linear forwards;
-  pointer-events: none;
-  z-index: 9999; /* ensures it's above papers */
-}
-
-@keyframes floatFairy {
-  to {
-    transform: translateY(120vh) rotateZ(360deg);
-    opacity: 0;
-  }
+  pointer-events: none; /* 👈 This lets clicks pass through */
+  z-index: 9999;
 }
