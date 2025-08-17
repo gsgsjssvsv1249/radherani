@@ -31,34 +31,6 @@ function createStar() {
 
 setInterval(createStar, 300);
 
-// 🧚‍♀️ Randomly Moving Fairy (Fantasy Mode)
-function createFairy() {
-  if (!document.body.classList.contains('fantasy-mode')) return;
-
-  const fairy = document.createElement('div');
-  fairy.className = 'flying-fairy';
-  document.body.appendChild(fairy);
-
-  let x = Math.random() * window.innerWidth;
-  let y = Math.random() * window.innerHeight;
-
-  fairy.style.left = `${x}px`;
-  fairy.style.top = `${y}px`;
-
-  const moveFairy = () => {
-    x = Math.random() * window.innerWidth;
-    y = Math.random() * window.innerHeight;
-    fairy.style.transform = `translate(${x}px, ${y}px)`;
-  };
-
-  const interval = setInterval(moveFairy, 3000);
-  setTimeout(() => {
-    clearInterval(interval);
-    fairy.remove();
-  }, 20000);
-}
-
-setInterval(createFairy, 30000);
 
 // 📝 Paper Dragging
 class Paper {
