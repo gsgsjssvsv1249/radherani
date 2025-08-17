@@ -1,21 +1,21 @@
 let highestZ = 1;
 
-// 🌸 Floating Petals
-const petalContainer = document.querySelector('.floating-petals');
+// ❤️ Floating Hearts (Day Mode)
+function createFloatingHeart() {
+  if (!document.body.classList.contains('day-mode')) return;
 
-function createFloatingPetal() {
-  const petal = document.createElement('div');
-  petal.className = 'petal';
-  petal.style.left = `${Math.random() * 100}vw`;
-  petal.style.animationDuration = `${5 + Math.random() * 5}s`;
-  petal.style.opacity = Math.random();
-  petalContainer.appendChild(petal);
-  setTimeout(() => petal.remove(), 10000);
+  const heart = document.createElement('div');
+  heart.className = 'heart';
+  heart.style.left = `${Math.random() * 100}vw`;
+  heart.style.animationDuration = `${5 + Math.random() * 5}s`;
+  heart.style.opacity = Math.random();
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 10000);
 }
 
-setInterval(createFloatingPetal, 500);
+setInterval(createFloatingHeart, 500);
 
-// 🌟 Animated Stars (Night Mode)
+// 🌟 Gold Neon Stars (Night Mode)
 function createStar() {
   if (!document.body.classList.contains('night-mode')) return;
 
@@ -29,17 +29,33 @@ function createStar() {
 
 setInterval(createStar, 300);
 
-// 🧚‍♀️ Flying Fairy (Fantasy Mode)
+// 🧚‍♀️ Randomly Moving Fairy (Fantasy Mode)
 function createFairy() {
   if (!document.body.classList.contains('fantasy-mode')) return;
 
   const fairy = document.createElement('div');
   fairy.className = 'flying-fairy';
   document.body.appendChild(fairy);
-  setTimeout(() => fairy.remove(), 20000);
+
+  let x = Math.random() * window.innerWidth;
+  let y = Math.random() * window.innerHeight;
+
+  fairy.style.left = `${x}px`;
+  fairy.style.top = `${y}px`;
+
+  const moveFairy = () => {
+    x = Math.random() * window.innerWidth;
+    y = Math.random() * window.innerHeight;
+    fairy.style.transform = `translate(${x}px, ${y}px)`;
+  };
+
+  const interval = setInterval(moveFairy, 3000);
+  setTimeout(() => {
+    clearInterval(interval);
+    fairy.remove();
+  }, 20000);
 }
 
-// Trigger fairy every 30 seconds
 setInterval(createFairy, 30000);
 
 // 📝 Paper Dragging
