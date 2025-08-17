@@ -1,19 +1,21 @@
 let highestZ = 1;
 
-// ❤️ Floating Hearts (Day Mode)
-function createFloatingHeart() {
+// 🌸 Floating Petals (Day Mode only)
+const petalContainer = document.querySelector('.floating-petals');
+
+function createFloatingPetal() {
   if (!document.body.classList.contains('day-mode')) return;
 
-  const heart = document.createElement('div');
-  heart.className = 'heart';
-  heart.style.left = `${Math.random() * 100}vw`;
-  heart.style.animationDuration = `${5 + Math.random() * 5}s`;
-  heart.style.opacity = Math.random();
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 10000);
+  const petal = document.createElement('div');
+  petal.className = 'petal';
+  petal.style.left = `${Math.random() * 100}vw`;
+  petal.style.animationDuration = `${5 + Math.random() * 5}s`;
+  petal.style.opacity = Math.random();
+  petalContainer.appendChild(petal);
+  setTimeout(() => petal.remove(), 10000);
 }
 
-setInterval(createFloatingHeart, 500);
+setInterval(createFloatingPetal, 500);
 
 // 🌟 Gold Neon Stars (Night Mode)
 function createStar() {
