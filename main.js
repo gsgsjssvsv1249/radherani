@@ -15,6 +15,33 @@ function createFloatingPetal() {
 
 setInterval(createFloatingPetal, 500);
 
+// 🌟 Animated Stars (Night Mode)
+function createStar() {
+  if (!document.body.classList.contains('night-mode')) return;
+
+  const star = document.createElement('div');
+  star.className = 'star';
+  star.style.left = `${Math.random() * 100}vw`;
+  star.style.top = `${Math.random() * 100}vh`;
+  document.body.appendChild(star);
+  setTimeout(() => star.remove(), 5000);
+}
+
+setInterval(createStar, 300);
+
+// 🧚‍♀️ Flying Fairy (Fantasy Mode)
+function createFairy() {
+  if (!document.body.classList.contains('fantasy-mode')) return;
+
+  const fairy = document.createElement('div');
+  fairy.className = 'flying-fairy';
+  document.body.appendChild(fairy);
+  setTimeout(() => fairy.remove(), 20000);
+}
+
+// Trigger fairy every 30 seconds
+setInterval(createFairy, 30000);
+
 // 📝 Paper Dragging
 class Paper {
   holdingPaper = false;
