@@ -369,12 +369,14 @@ body.fantasy-mode .p2 {
   position: fixed;
   width: 4px;
   height: 4px;
-  background: white;
+  background: gold;
+  box-shadow: 0 0 8px gold, 0 0 16px gold;
   border-radius: 50%;
   animation: twinkle 5s ease-in-out;
   pointer-events: none;
   z-index: 1;
 }
+
 
 @keyframes twinkle {
   0%, 100% { opacity: 0.2; transform: scale(1); }
@@ -382,14 +384,12 @@ body.fantasy-mode .p2 {
 }
 .flying-fairy {
   position: fixed;
-  top: 40%;
-  left: -100px;
   width: 80px;
   height: 80px;
-  background-image: url("images/fairy.png"); /* Use your fairy image */
+  background-image: url("images/fairy.png");
   background-size: contain;
   background-repeat: no-repeat;
-  animation: flyFairy 20s linear infinite;
+  transition: transform 2s ease-in-out;
   z-index: 2;
   pointer-events: none;
 }
