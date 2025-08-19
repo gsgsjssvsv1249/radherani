@@ -149,7 +149,7 @@ imageUpload.addEventListener('change', async (event) => {
       const formData = new FormData();
       formData.append('image', file);
 
-      const res = await fetch('http://localhost:8080/upload', {
+      const res = await fetch('https://radhraniii.up.railway.com/upload', {
         method: 'POST',
         body: formData
       });
