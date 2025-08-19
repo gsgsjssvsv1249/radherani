@@ -149,7 +149,7 @@ imageUpload.addEventListener('change', async (event) => {
       const formData = new FormData();
       formData.append('image', file);
 
-      const res = await fetch('production-asia-southeast1-eqsg3a.railway-registry.com/upload', {
+      const res = await fetch('http://localhost:8080/upload', {
         method: 'POST',
         body: formData
       });
